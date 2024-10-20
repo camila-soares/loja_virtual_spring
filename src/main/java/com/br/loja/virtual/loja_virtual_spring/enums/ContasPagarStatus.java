@@ -11,7 +11,9 @@ public enum ContasPagarStatus {
     CONBRANCA("Pagar"),
     VENCIDA("Vencida"),
     ABERTA("Aberta"),
-    RENEGOCIADA("Renegociada"),
+    ALUGUEL("Aluguel"),
+    FUNCIONARIO("Funcionário"),
+    NEGOCIADA("Renegociada"),
     QUITADA("Quitada");
 
     private String descricao;
