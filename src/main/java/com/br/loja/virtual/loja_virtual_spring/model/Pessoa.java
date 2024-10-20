@@ -3,6 +3,7 @@ package com.br.loja.virtual.loja_virtual_spring.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -17,13 +18,17 @@ public abstract class Pessoa implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
+    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_pessoa")
     private Long id;
 
+    @Column(nullable = false)
     private String nome;
 
+    @Column(nullable = false)
     private String email;
 
+    @Column(nullable = false)
     private String telefone;
 
     @OneToMany(mappedBy = "pessoa", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)

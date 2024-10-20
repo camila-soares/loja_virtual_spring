@@ -3,6 +3,7 @@ package com.br.loja.virtual.loja_virtual_spring.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 
@@ -12,9 +13,11 @@ import java.io.Serializable;
 @Data
 public class FormaPagamento implements Serializable {
     @Id
+    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_forma_pagamento")
     private Long id;
 
+    @Column(nullable = false)
     private String descricao;
 
 

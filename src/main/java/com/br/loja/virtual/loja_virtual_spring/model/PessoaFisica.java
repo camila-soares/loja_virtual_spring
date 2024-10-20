@@ -8,7 +8,6 @@ import lombok.EqualsAndHashCode;
 import java.util.Date;
 
 
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "pessoa_fisica")
 @Data

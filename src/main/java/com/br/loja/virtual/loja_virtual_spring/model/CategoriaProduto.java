@@ -3,6 +3,7 @@ package com.br.loja.virtual.loja_virtual_spring.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 
@@ -15,6 +16,7 @@ public class CategoriaProduto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
+    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.SEQUENCE,  generator = "seq_categoria_produto")
     private Long id;
 

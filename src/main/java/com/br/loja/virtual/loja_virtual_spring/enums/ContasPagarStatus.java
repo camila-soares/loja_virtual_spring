@@ -8,7 +8,7 @@ import lombok.ToString;
 @ToString
 public enum ContasPagarStatus {
 
-    CONBRANCA("Pagar"),
+    COBRANCA("Pagar"),
     VENCIDA("Vencida"),
     ABERTA("Aberta"),
     ALUGUEL("Aluguel"),

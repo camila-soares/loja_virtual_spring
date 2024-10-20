@@ -3,6 +3,7 @@ package com.br.loja.virtual.loja_virtual_spring.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.io.Serializable;
@@ -15,6 +16,7 @@ public class Acesso implements GrantedAuthority {
 
 
     @Id
+    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_acesso")
     private Long id;
 

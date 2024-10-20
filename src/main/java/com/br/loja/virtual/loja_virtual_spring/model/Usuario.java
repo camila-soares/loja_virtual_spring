@@ -3,6 +3,7 @@ package com.br.loja.virtual.loja_virtual_spring.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
@@ -19,15 +20,23 @@ public class Usuario  implements UserDetails {
     private static final long serialVersionUID = 1L;
 
     @Id
+    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_usuario")
     private Long id;
 
+    @Column(unique = true, nullable = false)
     private String login;
 
+    @Column(nullable = false)
     private String senha;
 
+    @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     private Date dataAtualSenha;
+
+    @ManyToOne(targetEntity = Pessoa.class)
+    @JoinColumn(name = "pessoa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_fk"))
+    private Pessoa pessoa;
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "usuarios_acesso",
@@ -35,11 +44,11 @@ public class Usuario  implements UserDetails {
             name = "unique_acesso_user"),
 
     joinColumns = @JoinColumn(name = "usuario_id", referencedColumnName = "id", table = "usuario", unique = false,
-            foreignKey = @ForeignKey(name = "usuario_fk", value = ConstraintMode.NO_CONSTRAINT)),
+            foreignKey = @ForeignKey(name = "usuario_fk", value = ConstraintMode.CONSTRAINT)),
 
             inverseJoinColumns = @JoinColumn(name = "acesso_id",
                     unique = false, referencedColumnName = "id", table = "acesso",
-            foreignKey = @ForeignKey(name = "acesso_fk" , value = ConstraintMode.NO_CONSTRAINT)))
+            foreignKey = @ForeignKey(name = "acesso_fk" , value = ConstraintMode.CONSTRAINT)))
     private List<Acesso> acessos;
 
     /*Autoridades = sao os acesso, ou role ROLE_ADMIN, ROLE_SECRETARIO, ROLE_FINANCEIRO*/
