@@ -14,11 +14,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 class LojaVirtualSpringApplicationTests {
 
 	@Autowired
-	private AcessoController acessoController;
+	private AcessoRepository repository;
 
 	@Autowired
-    private AcessoRepository acessoRepository;
-
+	private AcessoController controller;
 
     @Test
 	void testCadastraAcesso() {
@@ -26,7 +25,7 @@ class LojaVirtualSpringApplicationTests {
 		Acesso acesso = new Acesso();
 		acesso.setDescricao("ROLE_ADMIN");
 
-		acessoController.salvar(acesso);
+		controller.salvar(acesso);
 	}
 
 }

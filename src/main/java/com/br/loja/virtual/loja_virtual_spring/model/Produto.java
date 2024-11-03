@@ -2,7 +2,6 @@ package com.br.loja.virtual.loja_virtual_spring.model;
 
 
 import jakarta.persistence.*;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
