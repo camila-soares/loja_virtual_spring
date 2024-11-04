@@ -5,6 +5,8 @@ import com.br.loja.virtual.loja_virtual_spring.repository.AcessoRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class AcessoService {
@@ -19,4 +21,15 @@ public class AcessoService {
         this.acessoRepository.deleteById(id);
     }
 
+    public List<Acesso> listaAcesso() {
+        return this.acessoRepository.findAll();
+    }
+
+    public Acesso obterAcesso(Long id) {
+        return this.acessoRepository.findById(id).orElseThrow(() -> new RuntimeException("Acesso não encontrado"));
+    }
+
+    public List<Acesso> buscarPorDescricao(String descricao) {
+        return this.acessoRepository.buscaAcessoDesc(descricao);
+    }
 }
