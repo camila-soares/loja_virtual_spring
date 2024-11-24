@@ -3,7 +3,7 @@ package com.br.loja.virtual.loja_virtual_spring.model;
 
 import com.br.loja.virtual.loja_virtual_spring.enums.ContasPagarStatus;
 import com.br.loja.virtual.loja_virtual_spring.enums.ContasReceberStatus;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

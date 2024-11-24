@@ -1,6 +1,6 @@
 package com.br.loja.virtual.loja_virtual_spring.model;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

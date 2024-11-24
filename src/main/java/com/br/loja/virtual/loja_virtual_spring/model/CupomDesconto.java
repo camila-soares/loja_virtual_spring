@@ -1,11 +1,10 @@
 package com.br.loja.virtual.loja_virtual_spring.model;
 
 
-import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.ValueGenerationType;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;

@@ -1,11 +1,12 @@
 package com.br.loja.virtual.loja_virtual_spring.model;
 
 
-import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.persistence.*;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -20,7 +21,6 @@ public class Usuario  implements UserDetails {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_usuario")
     private Long id;
 
@@ -38,7 +38,12 @@ public class Usuario  implements UserDetails {
     @JoinColumn(name = "pessoa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_fk"))
     private Pessoa pessoa;
 
-    @OneToMany(fetch = FetchType.LAZY)
+//    @ManyToOne(targetEntity = Pessoa.class)
+//    @JoinColumn(name = "empresa_id", nullable = false,
+//            foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
+//    private Pessoa empresa;
+
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "usuarios_acesso",
             uniqueConstraints = @UniqueConstraint (columnNames = {"usuario_id", "acesso_id"},
             name = "unique_acesso_user"),

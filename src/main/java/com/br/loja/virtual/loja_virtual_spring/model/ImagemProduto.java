@@ -1,9 +1,9 @@
 package com.br.loja.virtual.loja_virtual_spring.model;
 
-import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity

@@ -1,13 +1,14 @@
 package com.br.loja.virtual.loja_virtual_spring.model;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 
+
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "pessoa_pj")
+@Table(name = "pessoa_juridica")
 @Data
 public class PessoaJuridica extends Pessoa {
 
@@ -18,7 +19,7 @@ public class PessoaJuridica extends Pessoa {
   @Column(nullable = false)
   private String inscEstadual;
 
-  private String inscMunicial;
+  private String inscMunicipal;
 
   @Column(nullable = false)
   private String nomeFantasia;

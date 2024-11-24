@@ -1,15 +1,21 @@
 package com.br.loja.virtual.loja_virtual_spring.controller;
 
 import com.br.loja.virtual.loja_virtual_spring.model.Acesso;
+import com.br.loja.virtual.loja_virtual_spring.repository.AcessoRepository;
 import com.br.loja.virtual.loja_virtual_spring.service.AcessoService;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+//@CrossOrigin(o)
 @RestController
 @Controller
 public class AcessoController {
@@ -17,9 +23,22 @@ public class AcessoController {
     @Autowired
     private AcessoService acessoService;
 
+    @Autowired
+    private AcessoRepository acessoRepository;
+
     @ResponseBody
+    //@Secured({"ROLE_ADMIN"})
     @PostMapping(value = "/salvarAcesso")
-    public ResponseEntity<Acesso> salvar(@RequestBody Acesso acesso) {
+    public ResponseEntity<Acesso> salvar(@RequestBody Acesso acesso) throws Exception {
+
+        if (acesso.getId() == null) {
+            List<Acesso> acessos = acessoRepository.buscaAcessoDesc(acesso.getDescricao().toUpperCase());
+
+            if (!acessos.isEmpty()){
+                throw new Exception("JA exsite" + acesso.getDescricao());
+            }
+        }
+
         Acesso acessoSalvo = acessoService.salvar(acesso);
         return new ResponseEntity<Acesso>(acessoSalvo, HttpStatus.CREATED);
     }
@@ -46,9 +65,22 @@ public class AcessoController {
     }
 
     @ResponseBody
+    //@Secured({ "ROLE_ADMIN", "ROLE_GERENTE"})
     @DeleteMapping(value = "/deleteAcesso/{id}")
     public String delete(@PathVariable Long id) {
         acessoService.delete(id);
         return "Acesso Deletado com sucesso!";
     }
+
+//    @ResponseBody
+//    @GetMapping(value = "camil/listaPorPageAcesso/{idEmpresa}/{pagina}")
+//    public ResponseEntity<List<Acesso>> page(@PathVariable("idEmpresa") Long idEmpresa,
+//                                             @PathVariable("pagina") Integer pagina){
+//
+//        Pageable pageable = PageRequest.of(pagina, 5, Sort.by("descricao"));
+//
+//        List<Acesso> lista = acessoRepository.findPorPage(idEmpresa, pageable);
+//
+//        return new ResponseEntity<List<Acesso>>(lista, HttpStatus.OK);
+//    }
 }

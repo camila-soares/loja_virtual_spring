@@ -2,11 +2,14 @@ package com.br.loja.virtual.loja_virtual_spring.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.security.core.GrantedAuthority;
 
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
@@ -24,6 +27,12 @@ public class Acesso implements GrantedAuthority {
     /*Acesso referente a roles dos usuários ex: ROLE_ADMIN ou ROLE_SECRETARIO*/
     @Column(nullable = false)
    private String descricao;
+
+//    @ManyToOne(targetEntity = Pessoa.class)
+//    @JoinColumn(name = "empresa_id", nullable = false,
+//            foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
+//    private PessoaJuridica empresa = new PessoaJuridica();
+
 
     @JsonIgnore
     @Override
