@@ -1,5 +1,6 @@
 package com.br.loja.virtual.loja_virtual_spring.service;
 
+import com.br.loja.virtual.loja_virtual_spring.exceptions.ExceptinLojaVirtual;
 import com.br.loja.virtual.loja_virtual_spring.model.Acesso;
 import com.br.loja.virtual.loja_virtual_spring.repository.AcessoRepository;
 import lombok.AllArgsConstructor;
@@ -13,7 +14,14 @@ public class AcessoService {
 
     private final AcessoRepository acessoRepository;
 
-    public Acesso salvar(Acesso acesso) {
+    public Acesso salvar(Acesso acesso) throws Exception {
+
+        List<Acesso> acessos = acessoRepository.buscaAcessoDesc(acesso.getDescricao().toUpperCase());
+
+        if (!acessos.isEmpty()) {
+                throw new ExceptinLojaVirtual("Já existe " + acesso.getDescricao() + "Cadastrado!");
+        }
+
         return this.acessoRepository.save(acesso);
     }
 
@@ -25,8 +33,14 @@ public class AcessoService {
         return this.acessoRepository.findAll();
     }
 
-    public Acesso obterAcesso(Long id) {
-        return this.acessoRepository.findById(id).orElseThrow(() -> new RuntimeException("Acesso não encontrado"));
+    public Acesso obterAcesso(Long id) throws ExceptinLojaVirtual {
+        Acesso acesso = this.acessoRepository.findById(id).orElse(null);
+
+        if (acesso == null) {
+            throw new ExceptinLojaVirtual("Não encontrado Acesso com código: " + id);
+        }
+
+        return acesso;
     }
 
     public List<Acesso> buscarPorDescricao(String descricao) {

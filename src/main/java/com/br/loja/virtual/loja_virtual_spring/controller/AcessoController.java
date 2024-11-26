@@ -1,5 +1,6 @@
 package com.br.loja.virtual.loja_virtual_spring.controller;
 
+import com.br.loja.virtual.loja_virtual_spring.exceptions.ExceptinLojaVirtual;
 import com.br.loja.virtual.loja_virtual_spring.model.Acesso;
 import com.br.loja.virtual.loja_virtual_spring.repository.AcessoRepository;
 import com.br.loja.virtual.loja_virtual_spring.service.AcessoService;
@@ -23,21 +24,10 @@ public class AcessoController {
     @Autowired
     private AcessoService acessoService;
 
-    @Autowired
-    private AcessoRepository acessoRepository;
-
     @ResponseBody
     //@Secured({"ROLE_ADMIN"})
     @PostMapping(value = "/salvarAcesso")
     public ResponseEntity<Acesso> salvar(@RequestBody Acesso acesso) throws Exception {
-
-        if (acesso.getId() == null) {
-            List<Acesso> acessos = acessoRepository.buscaAcessoDesc(acesso.getDescricao().toUpperCase());
-
-            if (!acessos.isEmpty()){
-                throw new Exception("JA exsite" + acesso.getDescricao());
-            }
-        }
 
         Acesso acessoSalvo = acessoService.salvar(acesso);
         return new ResponseEntity<Acesso>(acessoSalvo, HttpStatus.CREATED);
@@ -52,7 +42,7 @@ public class AcessoController {
 
     @ResponseBody
     @GetMapping(value = "/obterAcesso/{id}")
-    public ResponseEntity<Acesso> obterAcesso(@PathVariable("id") Long id) {
+    public ResponseEntity<Acesso> obterAcesso(@PathVariable("id") Long id) throws ExceptinLojaVirtual {
         Acesso acesso = acessoService.obterAcesso(id);
         return new ResponseEntity<>(acesso, HttpStatus.OK);
     }

@@ -5,6 +5,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.ws.rs.ForbiddenException;
 import java.sql.SQLDataException;
 import java.sql.SQLException;
 import java.util.List;
@@ -21,6 +23,17 @@ import java.util.List;
 @ControllerAdvice
 public class ControlException extends ResponseEntityExceptionHandler {
 
+
+    @ExceptionHandler(ExceptinLojaVirtual.class)
+    public ResponseEntity<Object> handleExceptionCustm(ExceptinLojaVirtual ex){
+
+        ObjetoErroDTO objetoErroDTO = new ObjetoErroDTO();
+
+        objetoErroDTO.setErro(ex.getMessage());
+        objetoErroDTO.setCodigo(HttpStatus.OK.toString());
+
+       return new ResponseEntity<>(objetoErroDTO, HttpStatus.OK);
+    }
     //captura excecao
     @ExceptionHandler({Exception.class, RuntimeException.class, Throwable.class})
     @Override
@@ -68,5 +81,23 @@ public class ControlException extends ResponseEntityExceptionHandler {
         objetoErroDTO.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.toString());
 
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler({AccessDeniedException.class})
+    protected ResponseEntity<Object> handleExceptionForbidden(AccessDeniedException ex) {
+
+        ObjetoErroDTO objetoErroDTO = new ObjetoErroDTO();
+
+        StringBuilder msg = null;
+
+        if (ex != null) {
+           msg = new StringBuilder("Usuário sem permissão" + ex.getMessage());
+
+        }
+
+        objetoErroDTO.setErro(msg.toString());
+        objetoErroDTO.setCodigo(HttpStatus.FORBIDDEN.toString());
+
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
     }
 }

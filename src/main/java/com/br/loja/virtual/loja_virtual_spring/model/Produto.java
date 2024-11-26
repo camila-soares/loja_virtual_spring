@@ -54,4 +54,9 @@ public class Produto implements Serializable {
     private Boolean alertaQtdeEstoque = Boolean.FALSE;
     private Integer clique = 0;
 
+    @ManyToOne(targetEntity = Pessoa.class)
+    @JoinColumn(name = "empresa_id", nullable = false,
+            foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
+    private Pessoa empresa;
+
 }

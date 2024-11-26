@@ -1433,7 +1433,7 @@ CREATE TRIGGER validachavepessoacontapagarpessoa_forn_id2 BEFORE INSERT ON conta
 --
 
 ALTER TABLE ONLY usuarios_acesso
-    ADD CONSTRAINT aesso_fk FOREIGN KEY (acesso_id) REFERENCES acesso(id);
+    ADD CONSTRAINT acesso_fk FOREIGN KEY (acesso_id) REFERENCES acesso(id);
 
 
 --
