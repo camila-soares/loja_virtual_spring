@@ -2,6 +2,7 @@ package com.br.loja.virtual.loja_virtual_spring.model;
 
 
 import com.br.loja.virtual.loja_virtual_spring.enums.TipoEndereco;
+import com.br.loja.virtual.loja_virtual_spring.enums.TipoPessoa;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -30,7 +31,8 @@ public abstract class Pessoa implements Serializable {
     private String email;
 
     @Column
-    private String tipoPessoa;
+    @Enumerated(EnumType.STRING)
+    private TipoPessoa tipoPessoa;
 
     @Column(nullable = false)
     private String telefone;

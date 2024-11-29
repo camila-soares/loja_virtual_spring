@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.mail.MessagingException;
 import javax.ws.rs.POST;
+import java.io.UnsupportedEncodingException;
 
 @Controller
 @RestController
@@ -20,7 +22,7 @@ public class PessoaController {
     private PessoaUserService pessoaUserService;
 
     @PostMapping(value = "/pessoaPj")
-    public ResponseEntity<PessoaJuridica> salvarPessoaJuridica(@RequestBody PessoaJuridica pessoaJuridica) throws ExceptinLojaVirtual {
+    public ResponseEntity<PessoaJuridica> salvarPessoaJuridica(@RequestBody PessoaJuridica pessoaJuridica) throws ExceptinLojaVirtual, MessagingException, UnsupportedEncodingException {
 
         PessoaJuridica pessoaJuridica1 = pessoaUserService.salvarPessoaJuridica(pessoaJuridica);
 
