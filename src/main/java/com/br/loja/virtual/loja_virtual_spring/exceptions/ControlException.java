@@ -5,6 +5,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -50,8 +51,10 @@ public class ControlException extends ResponseEntityExceptionHandler {
             for (ObjectError objectError : list) {
                 msg.append(objectError.getDefaultMessage()).append("\n");
             }
+        } else if (ex instanceof HttpMessageNotReadableException) {
+            msg.append("Não está sendo enviado dados para o body na requisicao");
         } else {
-            msg = new StringBuilder(ex.getMessage());
+            msg.append(ex.getMessage());
         }
 
         objetoErroDTO.setErro(msg.toString());

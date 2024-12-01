@@ -7,6 +7,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +27,12 @@ public abstract class Pessoa implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_pessoa")
     private Long id;
 
+    @NotNull(message = "Nome deve ser informado")
+    @NotBlank(message = "Nome deve ser informado")
     @Column(nullable = false)
     private String nome;
 
+    @Email(message = "Email está no formato inválido")
     @Column(nullable = false)
     private String email;
 

@@ -18,7 +18,7 @@ public class SendEmailService {
 
 
     @Async
-    public void enviarEmailHtml(String assunto, String mensagem, String destinatario) throws MessagingException, UnsupportedEncodingException {
+    public void enviarEmailHtmlLoginESenha(String assunto, String mensagem, String destinatario) throws MessagingException, UnsupportedEncodingException {
 
         Properties properties = new Properties();
         properties.put("mail.smtp.ssl.trust", "*");
@@ -44,10 +44,11 @@ public class SendEmailService {
 
         Message message = new MimeMessage(session);
 
-        message.setFrom(new InternetAddress(userName, "Camila do Java", "UTF-8"));
+        message.setFrom(new InternetAddress("camila.silva@accountfy.com", "Camila do Java", "UTF-8"));
         message.setRecipients(Message.RecipientType.TO, toUser);
         message.setSubject(assunto);
         message.setContent(mensagem, "text/html;charset=UTF-8");
+
 
         Transport.send(message);
 

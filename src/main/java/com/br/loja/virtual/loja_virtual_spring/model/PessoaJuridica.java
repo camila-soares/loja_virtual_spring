@@ -1,9 +1,12 @@
 package com.br.loja.virtual.loja_virtual_spring.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
+import org.hibernate.validator.constraints.br.CNPJ;
 
 
 @EqualsAndHashCode(callSuper = true)
@@ -13,6 +16,7 @@ import lombok.EqualsAndHashCode;
 public class PessoaJuridica extends Pessoa {
 
 
+  @CNPJ(message = "CNPJ Inválido")
   @Column(nullable = false)
   private String cnpj;
 
