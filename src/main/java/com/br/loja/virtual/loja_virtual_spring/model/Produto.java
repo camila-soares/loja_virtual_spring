@@ -2,6 +2,8 @@ package com.br.loja.virtual.loja_virtual_spring.model;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -24,6 +26,7 @@ public class Produto implements Serializable {
     @Column(nullable = false)
     private String tipoUnidade;
 
+
     @Column(nullable = false)
     private String nome;
 
@@ -31,6 +34,7 @@ public class Produto implements Serializable {
     private String descricao;
 
     /*Notam item nota produto ASSOCIAR*/
+
 
     @Column(nullable = false)
     private Double peso;
@@ -54,9 +58,21 @@ public class Produto implements Serializable {
     private Boolean alertaQtdeEstoque = Boolean.FALSE;
     private Integer clique = 0;
 
+    @NotNull(message = "Empresa deve ser informada")
     @ManyToOne(targetEntity = Pessoa.class)
     @JoinColumn(name = "empresa_id", nullable = false,
             foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
-    private Pessoa empresa;
+    private PessoaJuridica empresa;
+
+    @NotNull(message = "A Categoria do Produto deve ser informada")
+    @ManyToOne(targetEntity = CategoriaProduto.class)
+    @JoinColumn(name = "categoria_produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "categoria_produto_id_fk"))
+    private CategoriaProduto categoriaProduto = new CategoriaProduto();
+
+    @NotNull(message = "A Marca do Produto deve ser informada")
+    @ManyToOne(targetEntity = MarcaProduto.class)
+    @JoinColumn(name = "marca_produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "marca_produto_id_fk"))
+    private MarcaProduto marcaProduto = new MarcaProduto();
+
 
 }

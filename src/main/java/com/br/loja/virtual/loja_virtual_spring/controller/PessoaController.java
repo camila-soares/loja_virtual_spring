@@ -7,6 +7,7 @@ import com.br.loja.virtual.loja_virtual_spring.model.PessoaFisica;
 import com.br.loja.virtual.loja_virtual_spring.model.PessoaJuridica;
 import com.br.loja.virtual.loja_virtual_spring.service.PessoaFsicaUserService;
 import com.br.loja.virtual.loja_virtual_spring.service.PessoaJuridicaUserService;
+import com.br.loja.virtual.loja_virtual_spring.service.ws.ExternalApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,11 +29,14 @@ public class PessoaController {
     @Autowired
     private PessoaJuridicaUserService pessoaJuridicaUserService;
 
+    @Autowired
+    private ExternalApiService externalApiService;
+
 
     @GetMapping(value = "/consultaCep/{cep}")
     public ResponseEntity<CEPDto> consultaCep(@PathVariable("cep") String cep){
 
-        CEPDto cepDto = pessoaJuridicaUserService.consultaCEP(cep);
+        CEPDto cepDto = externalApiService.consultaCEP(cep);
 
         return new  ResponseEntity<>(cepDto, HttpStatus.OK);
     }
@@ -40,7 +44,7 @@ public class PessoaController {
     @GetMapping(value = "/consultaCnpjReceitaws/{cnpj}")
     public ResponseEntity<ConsultaCNPJDto> consultaCnpj(@PathVariable("cnpj") String cnpj){
 
-        ConsultaCNPJDto consultaCNPJDto = pessoaJuridicaUserService.consultaCNPJDto(cnpj);
+        ConsultaCNPJDto consultaCNPJDto = externalApiService.consultaCNPJDto(cnpj);
 
         return new  ResponseEntity<>(consultaCNPJDto, HttpStatus.OK);
     }
@@ -64,7 +68,7 @@ public class PessoaController {
 
         PessoaJuridica pessoaJuridica1 = pessoaJuridicaUserService.salvarPessoaJuridica(pessoaJuridica);
 
-        return ResponseEntity.ok().body(pessoaJuridica1);
+        return new  ResponseEntity<>(pessoaJuridica1, HttpStatus.CREATED);
     }
 
     @PostMapping(value = "/pessoaPf")
@@ -72,6 +76,6 @@ public class PessoaController {
 
         PessoaFisica pessoaJuridicareturn = pessoaFsicaUserService.salvarPessoaFisics(pessoaFisica);
 
-        return ResponseEntity.ok().body(pessoaJuridicareturn);
+        return new ResponseEntity<>(pessoaJuridicareturn, HttpStatus.CREATED);
     }
 }

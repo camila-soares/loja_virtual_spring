@@ -1,6 +1,9 @@
 package com.br.loja.virtual.loja_virtual_spring.exceptions;
 
+import com.br.loja.virtual.loja_virtual_spring.service.SendEmailService;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,7 +18,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.mail.MessagingException;
 import javax.ws.rs.ForbiddenException;
+import java.io.UnsupportedEncodingException;
 import java.sql.SQLDataException;
 import java.sql.SQLException;
 import java.util.List;
@@ -25,82 +30,105 @@ import java.util.List;
 public class ControlException extends ResponseEntityExceptionHandler {
 
 
+    @Autowired
+    private SendEmailService serviceSendEmail;
+
     @ExceptionHandler(ExceptinLojaVirtual.class)
-    public ResponseEntity<Object> handleExceptionCustm(ExceptinLojaVirtual ex){
+    public ResponseEntity<Object> handleExceptionCustom (ExceptinLojaVirtual ex) {
 
         ObjetoErroDTO objetoErroDTO = new ObjetoErroDTO();
 
         objetoErroDTO.setErro(ex.getMessage());
         objetoErroDTO.setCodigo(HttpStatus.OK.toString());
 
-       return new ResponseEntity<>(objetoErroDTO, HttpStatus.OK);
+        return new ResponseEntity<Object>(objetoErroDTO, HttpStatus.OK);
     }
-    //captura excecao
+
+
+
+    /*Captura execeçoes do projeto*/
     @ExceptionHandler({Exception.class, RuntimeException.class, Throwable.class})
     @Override
-    protected ResponseEntity<Object> handleExceptionInternal(Exception ex,
-                                                             Object body, HttpHeaders headers,
+    protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers,
                                                              HttpStatus status, WebRequest request) {
 
         ObjetoErroDTO objetoErroDTO = new ObjetoErroDTO();
 
-        StringBuilder msg = new StringBuilder();
+        String msg = "";
+
         if (ex instanceof MethodArgumentNotValidException) {
+
             List<ObjectError> list = ((MethodArgumentNotValidException) ex).getBindingResult().getAllErrors();
 
             for (ObjectError objectError : list) {
-                msg.append(objectError.getDefaultMessage()).append("\n");
+                msg += objectError.getDefaultMessage() + "\n";
             }
-        } else if (ex instanceof HttpMessageNotReadableException) {
-            msg.append("Não está sendo enviado dados para o body na requisicao");
-        } else {
-            msg.append(ex.getMessage());
+        }
+        else if (ex instanceof HttpMessageNotReadableException) {
+
+            msg = "Não está sendo enviado dados para o BODY corpo da requisição";
+
+        }else {
+            msg = ex.getMessage();
         }
 
-        objetoErroDTO.setErro(msg.toString());
+        objetoErroDTO.setErro(msg);
         objetoErroDTO.setCodigo(status.value() + " ==> " + status.getReasonPhrase());
 
-        return new ResponseEntity<>(objetoErroDTO, HttpStatus.INTERNAL_SERVER_ERROR);
+        ex.printStackTrace();
+
+        try {
+
+            serviceSendEmail.enviarEmailHtmlLoginESenha("Erro na loja virtual",
+                    org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace(ex),
+                    "alex.fernando.egidio@gmail.com");
+
+        } catch (UnsupportedEncodingException | MessagingException e) {
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<Object>(objetoErroDTO, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler({ConstraintViolationException.class,
-            DataIntegrityViolationException.class, SQLException.class})
-    protected ResponseEntity<Object> handeleExceptionDataIntegry(Exception ex){
+
+    /*Captura erro na parte de banco*/
+    @ExceptionHandler({DataIntegrityViolationException.class,
+            ConstraintViolationException.class, SQLException.class})
+    protected ResponseEntity<Object> handleExceptionDataIntegry(Exception ex){
 
         ObjetoErroDTO objetoErroDTO = new ObjetoErroDTO();
 
-        StringBuilder msg;
+        String msg = "";
 
         if (ex instanceof DataIntegrityViolationException) {
-            msg =  new StringBuilder("Erro de integridade do banco" + ex.getCause().getCause().getMessage());
-        } else if (ex instanceof ConstraintViolationException) {
-            msg = new StringBuilder("Erro de chave estrangeira do banco" + ex.getCause().getCause().getMessage());
-        } else if (ex instanceof SQLException) {
-            msg = new StringBuilder("Erro de sql do banco" + ex.getCause().getCause().getMessage());
+            msg = "Erro de integridade no banco: " +  ((DataIntegrityViolationException) ex).getCause().getCause().getMessage();
+        }else
+        if (ex instanceof ConstraintViolationException) {
+            msg = "Erro de chave estrangeira: " + ((ConstraintViolationException) ex).getCause().getCause().getMessage();
+        }else
+        if (ex instanceof SQLException) {
+            msg = "Erro de SQL do Banco: " + ((SQLException) ex).getCause().getCause().getMessage();
         }else {
-            msg = new StringBuilder(ex.getMessage());
+            msg = ex.getMessage();
         }
-        objetoErroDTO.setErro(msg.toString());
+
+        objetoErroDTO.setErro(msg);
         objetoErroDTO.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.toString());
 
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+        ex.printStackTrace();
 
-    @ExceptionHandler({AccessDeniedException.class})
-    protected ResponseEntity<Object> handleExceptionForbidden(AccessDeniedException ex) {
 
-        ObjetoErroDTO objetoErroDTO = new ObjetoErroDTO();
+        try {
 
-        StringBuilder msg = null;
+            serviceSendEmail.enviarEmailHtmlLoginESenha("Erro na loja virtual",
+                    ExceptionUtils.getStackTrace(ex),
+                    "alex.fernando.egidio@gmail.com");
 
-        if (ex != null) {
-           msg = new StringBuilder("Usuário sem permissão" + ex.getMessage());
-
+        } catch (UnsupportedEncodingException | MessagingException e) {
+            e.printStackTrace();
         }
 
-        objetoErroDTO.setErro(msg.toString());
-        objetoErroDTO.setCodigo(HttpStatus.FORBIDDEN.toString());
+        return new ResponseEntity<Object>(objetoErroDTO, HttpStatus.INTERNAL_SERVER_ERROR);
 
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
     }
 }

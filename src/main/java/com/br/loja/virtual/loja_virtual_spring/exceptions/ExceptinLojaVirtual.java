@@ -2,7 +2,9 @@ package com.br.loja.virtual.loja_virtual_spring.exceptions;
 
 public class ExceptinLojaVirtual extends Exception {
 
-    public ExceptinLojaVirtual(String message) {
-        super(message);
+    private static final long serialVersionUID = 1L;
+
+    public ExceptinLojaVirtual(String msgErro) {
+        super(msgErro);
     }
 }

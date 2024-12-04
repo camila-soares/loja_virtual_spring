@@ -4,16 +4,10 @@ import com.br.loja.virtual.loja_virtual_spring.dto.CEPDto;
 import com.br.loja.virtual.loja_virtual_spring.dto.ConsultaCNPJDto;
 import com.br.loja.virtual.loja_virtual_spring.enums.TipoEndereco;
 import com.br.loja.virtual.loja_virtual_spring.exceptions.ExceptinLojaVirtual;
-import com.br.loja.virtual.loja_virtual_spring.model.Endereco;
-import com.br.loja.virtual.loja_virtual_spring.model.PessoaFisica;
-import com.br.loja.virtual.loja_virtual_spring.model.PessoaJuridica;
-import com.br.loja.virtual.loja_virtual_spring.model.Usuario;
-import com.br.loja.virtual.loja_virtual_spring.repository.EnderecoRepository;
-import com.br.loja.virtual.loja_virtual_spring.repository.PessoaFisicaRepository;
-import com.br.loja.virtual.loja_virtual_spring.repository.PessoaJuridicaRepository;
-import com.br.loja.virtual.loja_virtual_spring.repository.UsuarioRepository;
+import com.br.loja.virtual.loja_virtual_spring.model.*;
+import com.br.loja.virtual.loja_virtual_spring.repository.*;
+import com.br.loja.virtual.loja_virtual_spring.service.ws.ExternalApiService;
 import com.br.loja.virtual.loja_virtual_spring.utils.ValidateCNPJ;
-import com.br.loja.virtual.loja_virtual_spring.utils.ValidateCPF;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -43,29 +37,21 @@ public class PessoaJuridicaUserService {
     @Autowired
     private SendEmailService sendEmailService;
 
+    @Autowired
+    private ExternalApiService externalApiService;
+
+    @Autowired
+    private CategoriaProdutoRepository categoriaProdutoRepository;
+
 
     public PessoaJuridica salvarPessoaJuridica(PessoaJuridica pj) throws ExceptinLojaVirtual, MessagingException, UnsupportedEncodingException {
-        if (pj == null) {
-            throw new ExceptinLojaVirtual("Pessoa juridica não pode ser nulo");
-        }
 
 
-        if (!ValidateCNPJ.isCNPJ(pj.getCnpj())) {
-            throw new ExceptinLojaVirtual("CNPJ Inválido, verifique a numeração corretamente " + pj.getCnpj());
-        }
-
-        if (pj.getId() == null && pessoaRepository.findByCnpj(pj.getCnpj()) != null) {
-            throw new ExceptinLojaVirtual("CNPJ já cadastrado " + pj.getCnpj());
-        }
-
-        if (pj.getId() == null && pessoaRepository.existInscricaoEstadual(pj.getInscEstadual()) != null) {
-            throw new ExceptinLojaVirtual("Já existe inscricao estsdual com o número " + pj.getInscEstadual());
-        }
-       // pj = this.pessoaRepository.save(pj);
+        validationFields(pj);
 
       if (pj.getId() == null || pj.getId() <= 0){
           for (int p = 0; p< pj.getEnderecos().size(); p++){
-              CEPDto cepDto =   consultaCEP(pj.getEnderecos().get(p).getCep());
+              CEPDto cepDto =   externalApiService.consultaCEP(pj.getEnderecos().get(p).getCep());
               pj.getEnderecos().get(p).setBairro(cepDto.getBairro());
               pj.getEnderecos().get(p).setCidade(cepDto.getLocalidade());
               pj.getEnderecos().get(p).setComplemento(cepDto.getComplemento());
@@ -84,7 +70,7 @@ public class PessoaJuridicaUserService {
               Endereco enderecoTemp = enderecoRepository.findById(pj.getEnderecos().get(p).getId()).orElse(null);
 
               if (!enderecoTemp.getCep().equals(pj.getEnderecos().get(p).getCep())) {
-                  CEPDto cepDto =   consultaCEP(pj.getEnderecos().get(p).getCep());
+                  CEPDto cepDto =   externalApiService.consultaCEP(pj.getEnderecos().get(p).getCep());
 
                   pj.getEnderecos().get(p).setBairro(cepDto.getBairro());
                   pj.getEnderecos().get(p).setCidade(cepDto.getLocalidade());
@@ -99,8 +85,8 @@ public class PessoaJuridicaUserService {
           }
       }
 
-        pj.setEmpresa(pj);
 
+        pj.setEmpresa(pj);
         pj = this.pessoaRepository.save(pj);
 
         String senha = createUserAndUserAcessPessoaJuridica(pj);
@@ -108,6 +94,25 @@ public class PessoaJuridicaUserService {
         sendEmailHtmlPessoaJuridica(pj, senha);
         return pj;
     }
+
+    private void validationFields(PessoaJuridica pj) throws ExceptinLojaVirtual {
+        if (pj == null) {
+            throw new ExceptinLojaVirtual("Pessoa juridica não pode ser nulo");
+        }
+
+        if (!ValidateCNPJ.isCNPJ(pj.getCnpj())) {
+            throw new ExceptinLojaVirtual("CNPJ Inválido, verifique a numeração corretamente " + pj.getCnpj());
+        }
+
+        if (pj.getId() == null && pessoaRepository.findByCnpj(pj.getCnpj()) != null) {
+            throw new ExceptinLojaVirtual("CNPJ já cadastrado " + pj.getCnpj());
+        }
+
+        if (pj.getId() == null && pessoaRepository.existInscricaoEstadual(pj.getInscEstadual()) != null) {
+            throw new ExceptinLojaVirtual("Já existe inscricao estsdual com o número " + pj.getInscEstadual());
+        }
+    }
+
 
     private String createUserAndUserAcessPessoaJuridica(PessoaJuridica pj) {
         Usuario usuarioPj = usuarioRepository.findByPessoa(pj.getId(), pj.getEmail());
@@ -147,18 +152,6 @@ public class PessoaJuridicaUserService {
         }catch (Exception e){
             e.printStackTrace();
         }
-    }
-
-    public CEPDto consultaCEP(String cep) {
-        return new RestTemplate().getForEntity("https://viacep.com.br/ws/"+cep+"/json/", CEPDto.class).getBody();
-
-    }
-
-    public ConsultaCNPJDto consultaCNPJDto(String cnpj) {
-
-        return new RestTemplate()
-                .getForEntity("https://receitaws.com.br/v1/cnpj/"+cnpj, ConsultaCNPJDto.class).getBody();
-
     }
 
     public List<PessoaJuridica> consultaPorCNPJ(String cnpj) {

@@ -6,6 +6,7 @@ import com.br.loja.virtual.loja_virtual_spring.model.PessoaFisica;
 import com.br.loja.virtual.loja_virtual_spring.model.Usuario;
 import com.br.loja.virtual.loja_virtual_spring.repository.PessoaFisicaRepository;
 import com.br.loja.virtual.loja_virtual_spring.repository.UsuarioRepository;
+import com.br.loja.virtual.loja_virtual_spring.service.ws.ExternalApiService;
 import com.br.loja.virtual.loja_virtual_spring.utils.ValidateCPF;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -35,6 +36,9 @@ public class PessoaFsicaUserService {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private ExternalApiService externalApiService;
 
 
 

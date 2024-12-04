@@ -26,7 +26,7 @@ public class NotaItemProduto implements Serializable {
     @JoinColumn(name = "nota_fiscal_compra_id ", nullable = false,
             foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT,
                     name = "nota_fiscal_compra_fk"))
-    private NotaFiscalCompra notaFiscalCompra;
+        private NotaFiscalCompra notaFiscalCompra;
 
     @ManyToOne
     @JoinColumn(name = "produto_id ", nullable = false,
@@ -34,10 +34,10 @@ public class NotaItemProduto implements Serializable {
                     name = "produto_fk"))
     private Produto produto;
 
-    @ManyToOne(targetEntity = Pessoa.class)
+    @ManyToOne(targetEntity = PessoaJuridica.class)
     @JoinColumn(name = "empresa_id", nullable = false,
             foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
-    private Pessoa empresa;
+    private PessoaJuridica empresa;
 
     @Column(nullable = false)
     private Double quantidade;
