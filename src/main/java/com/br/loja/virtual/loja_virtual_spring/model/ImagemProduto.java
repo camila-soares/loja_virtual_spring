@@ -1,5 +1,7 @@
 package com.br.loja.virtual.loja_virtual_spring.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -22,14 +24,16 @@ public class ImagemProduto implements Serializable {
     @Column(columnDefinition = "text", nullable = false)
     private String imageMiniatura;
 
+   @JsonIgnore
     @ManyToOne(targetEntity = Produto.class)
     @JoinColumn(name = "produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "produto_fk"))
     private Produto produto;
 
-    @ManyToOne(targetEntity = Pessoa.class)
+    @JsonIgnore
+    @ManyToOne(targetEntity = PessoaJuridica.class)
     @JoinColumn(name = "empresa_id", nullable = false,
             foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
-    private Pessoa empresa;
+    private PessoaJuridica empresa;
 
 
 }

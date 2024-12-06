@@ -10,6 +10,8 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "produto")
@@ -30,11 +32,11 @@ public class Produto implements Serializable {
     @Column(nullable = false)
     private String nome;
 
+    @Column(nullable = false)
+    private Boolean ativo = Boolean.TRUE;
+
     @Column(columnDefinition = "text", length = 2000, nullable = false)
     private String descricao;
-
-    /*Notam item nota produto ASSOCIAR*/
-
 
     @Column(nullable = false)
     private Double peso;
@@ -51,11 +53,17 @@ public class Produto implements Serializable {
     @Column(nullable = false)
     private BigDecimal valorVenda = BigDecimal.ZERO;
 
+    @NotNull(message = "Informe a quantidade de estoque")
     @Column(nullable = false)
     private Integer qdtEstoque = 0 ;
+
+    @NotNull(message = "Informe a quantidade de alerta de produto")
     private Integer qtdeAlertaEstoque = 0;
+
     private String linkYouTube;
+
     private Boolean alertaQtdeEstoque = Boolean.FALSE;
+
     private Integer clique = 0;
 
     @NotNull(message = "Empresa deve ser informada")
@@ -74,5 +82,7 @@ public class Produto implements Serializable {
     @JoinColumn(name = "marca_produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "marca_produto_id_fk"))
     private MarcaProduto marcaProduto = new MarcaProduto();
 
+    @OneToMany(mappedBy = "produto", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ImagemProduto> imagens = new ArrayList<>();
 
 }

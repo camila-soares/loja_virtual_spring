@@ -7,9 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 
 @Controller
 @RestController
@@ -19,8 +22,16 @@ public class ProdutoController {
     private ProdutoService produtoService;
 
     @PostMapping(value = "/salvarProduto")
-    public ResponseEntity<Produto> criarProduto(@RequestBody Produto produto) throws ExceptinLojaVirtual {
+    public ResponseEntity<Produto> criarProduto(@Valid @RequestBody Produto produto) throws ExceptinLojaVirtual, IOException {
        Produto produtoretorno = produtoService.criarProduto(produto);
         return new ResponseEntity<Produto>(produtoretorno, HttpStatus.CREATED);
+    }
+
+    @GetMapping(value = "/buscarProdutoPorId/{id}")
+    public ResponseEntity<Produto> buscarProdutoPorId(@PathVariable Long id) throws ExceptinLojaVirtual, IOException {
+
+        Produto produto  = produtoService.buscarProdutoPorId(id);
+
+        return new ResponseEntity<>(produto, HttpStatus.OK);
     }
 }

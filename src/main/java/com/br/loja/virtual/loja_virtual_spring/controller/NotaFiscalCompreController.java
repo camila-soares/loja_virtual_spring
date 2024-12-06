@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @Controller
 public class NotaFiscalCompreController {
@@ -24,7 +26,7 @@ public class NotaFiscalCompreController {
     private NotaFiscalCompraService notaFiscalCompraService;
 
     @PostMapping(value = "/cadastrarNotaFicalCompra")
-    public ResponseEntity<NotaFiscalCompra> cadastrarNotaFiscalCompra(@RequestBody NotaFiscalCompra notaFiscalCompra) {
+    public ResponseEntity<NotaFiscalCompra> cadastrarNotaFiscalCompra(@Valid @RequestBody NotaFiscalCompra notaFiscalCompra) {
 
       NotaFiscalCompra notaFiscalComprareturn =  notaFiscalCompraService.cadastrarNotaFiscalCompra(notaFiscalCompra);
 
