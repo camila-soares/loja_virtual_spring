@@ -9,6 +9,7 @@ import com.br.loja.virtual.loja_virtual_spring.repository.UsuarioRepository;
 import com.br.loja.virtual.loja_virtual_spring.service.ws.ExternalApiService;
 import com.br.loja.virtual.loja_virtual_spring.utils.ValidateCPF;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,8 +26,6 @@ public class PessoaFsicaUserService {
     @Autowired
     private ServiceContagemAcessoApi serviceContagemAcessoApi;
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
 
     @Autowired
     private PessoaFisicaRepository pessoaFisicaRepository;
@@ -35,10 +34,8 @@ public class PessoaFsicaUserService {
     private SendEmailService sendEmailService;
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private UsuarioService usuarioService;
 
-    @Autowired
-    private ExternalApiService externalApiService;
 
 
 
@@ -60,15 +57,15 @@ public class PessoaFsicaUserService {
 
     public PessoaFisica salvarPessoaFisics(PessoaFisica pf) throws ExceptinLojaVirtual, MessagingException, UnsupportedEncodingException {
         if (pf == null) {
-            throw new ExceptinLojaVirtual("Pessoa fisica não pode ser nulo");
+            throw new ExceptinLojaVirtual("Pessoa fisica não pode ser nulo", HttpStatus.NOT_FOUND);
         }
 
         if (!ValidateCPF.isCPF(pf.getCpf())) {
-            throw new ExceptinLojaVirtual("CPF Inválido, verifique a numeração corretamente " + pf.getCpf());
+            throw new ExceptinLojaVirtual("CPF Inválido, verifique a numeração corretamente " + pf.getCpf(), HttpStatus.NOT_FOUND);
         }
 
         if (pf.getId() == null && pessoaFisicaRepository.findByCPF(pf.getCpf()) != null) {
-            throw new ExceptinLojaVirtual("CPF já cadastrado " + pf.getCpf());
+            throw new ExceptinLojaVirtual("CPF já cadastrado " + pf.getCpf(), HttpStatus.NOT_FOUND);
         }
 
         for (int i = 0; i< pf.getEnderecos().size(); i++) {
@@ -77,38 +74,13 @@ public class PessoaFsicaUserService {
         }
         pf = this.pessoaFisicaRepository.save(pf);
 
-        String senha = createUserAndUserAcessPessoaFisica(pf);
+        String senha = usuarioService.createUsuarioAndUsuarioAcessoByPessoaJuridicaAndPessoaFisica(null, pf);
 
         sendEmailHtmlPessoaFisica(pf, senha);
         return pf;
     }
 
 
-    private String createUserAndUserAcessPessoaFisica(PessoaFisica pf) {
-        Usuario usuarioPf = usuarioRepository.findByPessoa(pf.getId(), pf.getEmail());
-
-        //if (usuarioPj == null) {
-        String constraint = usuarioRepository.consultaConstraintAcesso();
-        if (constraint != null) {
-            jdbcTemplate.execute("begin; alter table usuarios_acesso drop constraint " + constraint + "; commit;");
-        }
-        //}
-        usuarioPf = new Usuario();
-        usuarioPf.setDataAtualSenha(Calendar.getInstance().getTime());
-        usuarioPf.setEmpresa(pf);
-        usuarioPf.setPessoa(pf);
-        usuarioPf.setLogin(pf.getEmail());
-
-        String senha = "" + Calendar.getInstance().getTimeInMillis();
-        String senhaCript = new BCryptPasswordEncoder().encode(senha);
-
-        usuarioPf.setSenha(senhaCript);
-        usuarioPf = this.usuarioRepository.save(usuarioPf);
-
-        usuarioRepository.inserAcessoUser(usuarioPf.getId());
-        // usuarioRepository.inserAcessoUserPJ(usuarioPj.getId(), "ROLE_ADMIN");
-        return senha;
-    }
 
     public CEPDto consultaCEP(String cep) {
         return new RestTemplate().getForEntity("https://viacep.com.br/ws/"+cep+"/json/", CEPDto.class).getBody();

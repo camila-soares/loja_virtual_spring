@@ -5,6 +5,8 @@ import com.br.loja.virtual.loja_virtual_spring.enums.TipoEndereco;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.EqualsAndHashCode.Exclude;
+import org.apache.commons.lang3.builder.HashCodeExclude;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -13,10 +15,11 @@ import java.io.Serializable;
 @Table(name = "endereco")
 @SequenceGenerator(name = "seq_endereco", sequenceName = "seq_endereco", allocationSize = 1, initialValue = 1)
 @Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Endereco implements Serializable {
 
     @Id
-    @EqualsAndHashCode.Include
+    //@EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "seq_endereco")
     private Long id;
     @Column(nullable = false)

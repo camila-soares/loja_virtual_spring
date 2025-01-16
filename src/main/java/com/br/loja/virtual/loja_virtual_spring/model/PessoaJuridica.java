@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.br.CNPJ;
 
 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Entity
 @Table(name = "pessoa_juridica")
 @Data

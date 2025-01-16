@@ -4,6 +4,7 @@ import com.br.loja.virtual.loja_virtual_spring.exceptions.ExceptinLojaVirtual;
 import com.br.loja.virtual.loja_virtual_spring.model.Acesso;
 import com.br.loja.virtual.loja_virtual_spring.repository.AcessoRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public class AcessoService {
         List<Acesso> acessos = acessoRepository.buscaAcessoDesc(acesso.getDescricao().toUpperCase());
 
         if (!acessos.isEmpty()) {
-                throw new ExceptinLojaVirtual("Já existe " + acesso.getDescricao() + "Cadastrado!");
+                throw new ExceptinLojaVirtual("Já existe " + acesso.getDescricao() + "Cadastrado!", HttpStatus.NOT_FOUND);
         }
 
         return this.acessoRepository.save(acesso);
@@ -37,7 +38,7 @@ public class AcessoService {
         Acesso acesso = this.acessoRepository.findById(id).orElse(null);
 
         if (acesso == null) {
-            throw new ExceptinLojaVirtual("Não encontrado Acesso com código: " + id);
+            throw new ExceptinLojaVirtual("Não encontrado Acesso com código: " + id, HttpStatus.NOT_FOUND);
         }
 
         return acesso;

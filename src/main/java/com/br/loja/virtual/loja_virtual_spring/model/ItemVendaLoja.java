@@ -1,5 +1,7 @@
 package com.br.loja.virtual.loja_virtual_spring.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,29 +17,30 @@ public class ItemVendaLoja implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_item_venda_loja")
     private Long id;
 
     @Column(nullable = false)
     private Double quantidade;
 
+    @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "produto_id ", nullable = false,
+    @JoinColumn(name = "produto_id", nullable = false,
             foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT,
                     name = "produto_fk"))
     private Produto produto;
 
     @ManyToOne
-    @JoinColumn(name = "venda_compra_loja_virtual_id ", nullable = false,
+    @JoinColumn(name = "venda_compra_loja_virtual_id", nullable = false,
             foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT,
                     name = "venda_compra_loja_virtual_fk"))
     private VendaCompraLojaVirtual vendaCompraLojaVirtual;
 
-    @ManyToOne(targetEntity = Pessoa.class)
+    @JsonIgnore
+    @ManyToOne(targetEntity = PessoaJuridica.class)
     @JoinColumn(name = "empresa_id", nullable = false,
             foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
-    private Pessoa empresa;
+    private PessoaJuridica empresa;
 
 
 }

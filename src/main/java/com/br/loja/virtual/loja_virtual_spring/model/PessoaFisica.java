@@ -10,7 +10,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Entity
 @Table(name = "pessoa_fisica")
 @Data

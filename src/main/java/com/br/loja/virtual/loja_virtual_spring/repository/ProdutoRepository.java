@@ -26,4 +26,7 @@ public interface ProdutoRepository extends CrudRepository<Produto, Long> {
 
     @Query("select a from Produto a where upper(trim(a.nome)) like %?1% and a.empresa.id = ?2")
     public List<Produto> buscarProdutoNome(String nome, Long idEmpresa);
+
+    @Query("select p from Produto p where p.alertaQtdeEstoque = true and p.qdtEstoque <= 5")
+    List<Produto> findByEstoqueBaixo();
 }

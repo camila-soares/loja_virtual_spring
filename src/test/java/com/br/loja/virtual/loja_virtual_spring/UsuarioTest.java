@@ -75,12 +75,12 @@ public class UsuarioTest {
         pessoaController.salvarPessoaFisica(pessoaFisica);
     }
 
-    @Test
-    public void consultaCep(){
-       CEPDto cepDto = pessoaJuridicaUserService.consultaCEP("52210001");
-
-       cepDto.setDdd(cepDto.getDdd());
-    }
+//    @Test
+//    public void consultaCep(){
+//       CEPDto cepDto = pessoaJuridicaUserService.consultaCEP("52210001");
+//
+//       cepDto.setDdd(cepDto.getDdd());
+//    }
 
     @Test
     public void testPessoa() throws ExceptinLojaVirtual, MessagingException, UnsupportedEncodingException {
@@ -88,23 +88,23 @@ public class UsuarioTest {
         PessoaJuridica pessoaJuridica = new PessoaJuridica();
         pessoaJuridica.setNome("Camila Soares Xavier");
         pessoaJuridica.setEmail("camilasoares1507@gmail.com");
-        pessoaJuridica.setCnpj(String.valueOf(Calendar.getInstance().getTimeInMillis()));
+        pessoaJuridica.setCnpj("95.876.479/0001-30");
         pessoaJuridica.setTelefone("123456789");
-        pessoaJuridica.setInscEstadual("87687687687");
+        pessoaJuridica.setInscEstadual("87687687557");
         pessoaJuridica.setInscMunicipal("123456789");
         pessoaJuridica.setRazaoSocial("Camila Soares Xavier LTDA");
         pessoaJuridica.setNomeFantasia("Camila Soares Xavier LTDA");
 
         Endereco endereco1 = new Endereco();
-        endereco1.setLogradouro("Rua do Rua do");
-        endereco1.setBairro("Agua fria");
-        endereco1.setCidade("Sao Paulo");
-        endereco1.setCep("98989898");
-        endereco1.setComplemento("ANdar 1");
-        endereco1.setNumero("178");
+//        endereco1.setLogradouro("Rua do Rua do");
+//        endereco1.setBairro("Agua fria");
+//        endereco1.setCidade("Sao Paulo");
+        endereco1.setCep("52210001");
+//        endereco1.setComplemento("ANdar 1");
+//        endereco1.setNumero("178");
         endereco1.setPessoa(pessoaJuridica);
         endereco1.setTipoEndereco(TipoEndereco.COBRANCA);
-        endereco1.setUf("SP");
+//        endereco1.setUf("SP");
         endereco1.setEmpresa(pessoaJuridica);
 
         Endereco endereco2 = new Endereco();

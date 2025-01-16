@@ -17,6 +17,7 @@ import java.util.List;
 @Table(name = "produto")
 @SequenceGenerator(name = "seq_produto", sequenceName = "seq_produto", allocationSize = 1, initialValue = 1)
 @Data
+@EqualsAndHashCode
 public class Produto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -81,6 +82,7 @@ public class Produto implements Serializable {
     @ManyToOne(targetEntity = MarcaProduto.class)
     @JoinColumn(name = "marca_produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "marca_produto_id_fk"))
     private MarcaProduto marcaProduto = new MarcaProduto();
+
 
     @OneToMany(mappedBy = "produto", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ImagemProduto> imagens = new ArrayList<>();

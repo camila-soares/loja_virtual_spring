@@ -17,6 +17,7 @@ public interface NotaFiscalCompraRepository extends JpaRepository<NotaFiscalComp
     List<NotaFiscalCompra> findNotaByDescricao(String descricao);
 
 
+
     @Query(value = "select n from NotaFiscalCompra n where n.pessoa.id = ?1")
     List<NotaFiscalCompra> findNotaByPessoa(Long idPessoa);
 

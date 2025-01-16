@@ -46,6 +46,8 @@ public class ControlException extends ResponseEntityExceptionHandler {
 
 
 
+
+
     /*Captura execeçoes do projeto*/
     @ExceptionHandler({Exception.class, RuntimeException.class, Throwable.class})
     @Override

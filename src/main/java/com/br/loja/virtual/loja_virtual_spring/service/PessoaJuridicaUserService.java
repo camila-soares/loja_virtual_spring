@@ -1,7 +1,6 @@
 package com.br.loja.virtual.loja_virtual_spring.service;
 
 import com.br.loja.virtual.loja_virtual_spring.dto.CEPDto;
-import com.br.loja.virtual.loja_virtual_spring.dto.ConsultaCNPJDto;
 import com.br.loja.virtual.loja_virtual_spring.enums.TipoEndereco;
 import com.br.loja.virtual.loja_virtual_spring.exceptions.ExceptinLojaVirtual;
 import com.br.loja.virtual.loja_virtual_spring.model.*;
@@ -9,10 +8,10 @@ import com.br.loja.virtual.loja_virtual_spring.repository.*;
 import com.br.loja.virtual.loja_virtual_spring.service.ws.ExternalApiService;
 import com.br.loja.virtual.loja_virtual_spring.utils.ValidateCNPJ;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
@@ -32,7 +31,7 @@ public class PessoaJuridicaUserService {
     private PessoaJuridicaRepository pessoaRepository;
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private UsuarioService usuarioService;
 
     @Autowired
     private SendEmailService sendEmailService;
@@ -89,7 +88,7 @@ public class PessoaJuridicaUserService {
         pj.setEmpresa(pj);
         pj = this.pessoaRepository.save(pj);
 
-        String senha = createUserAndUserAcessPessoaJuridica(pj);
+        String senha = usuarioService.createUsuarioAndUsuarioAcessoByPessoaJuridicaAndPessoaFisica(pj, null);
 
         sendEmailHtmlPessoaJuridica(pj, senha);
         return pj;
@@ -97,48 +96,23 @@ public class PessoaJuridicaUserService {
 
     private void validationFields(PessoaJuridica pj) throws ExceptinLojaVirtual {
         if (pj == null) {
-            throw new ExceptinLojaVirtual("Pessoa juridica não pode ser nulo");
+            throw new ExceptinLojaVirtual("Pessoa juridica não pode ser nulo", HttpStatus.NOT_FOUND);
         }
 
         if (!ValidateCNPJ.isCNPJ(pj.getCnpj())) {
-            throw new ExceptinLojaVirtual("CNPJ Inválido, verifique a numeração corretamente " + pj.getCnpj());
+            throw new ExceptinLojaVirtual("CNPJ Inválido, verifique a numeração corretamente " + pj.getCnpj(), HttpStatus.NOT_FOUND);
         }
 
         if (pj.getId() == null && pessoaRepository.findByCnpj(pj.getCnpj()) != null) {
-            throw new ExceptinLojaVirtual("CNPJ já cadastrado " + pj.getCnpj());
+            throw new ExceptinLojaVirtual("CNPJ já cadastrado " + pj.getCnpj(), HttpStatus.NOT_FOUND);
         }
 
         if (pj.getId() == null && pessoaRepository.existInscricaoEstadual(pj.getInscEstadual()) != null) {
-            throw new ExceptinLojaVirtual("Já existe inscricao estsdual com o número " + pj.getInscEstadual());
+            throw new ExceptinLojaVirtual("Já existe inscricao estsdual com o número " + pj.getInscEstadual(), HttpStatus.NOT_FOUND);
         }
     }
 
 
-    private String createUserAndUserAcessPessoaJuridica(PessoaJuridica pj) {
-        Usuario usuarioPj = usuarioRepository.findByPessoa(pj.getId(), pj.getEmail());
-
-        //if (usuarioPj == null) {
-        String constraint = usuarioRepository.consultaConstraintAcesso();
-        if (constraint != null) {
-            jdbcTemplate.execute("begin; alter table usuarios_acesso drop constraint " + constraint + "; commit;");
-        }
-        //}
-        usuarioPj = new Usuario();
-        usuarioPj.setDataAtualSenha(Calendar.getInstance().getTime());
-        usuarioPj.setEmpresa(pj);
-        usuarioPj.setPessoa(pj);
-        usuarioPj.setLogin(pj.getEmail());
-
-        String senha = "" + Calendar.getInstance().getTimeInMillis();
-        String senhaCript = new BCryptPasswordEncoder().encode(senha);
-
-        usuarioPj.setSenha(senhaCript);
-        usuarioPj = this.usuarioRepository.save(usuarioPj);
-
-        usuarioRepository.inserAcessoUser(usuarioPj.getId());
-      // usuarioRepository.inserAcessoUserPJ(usuarioPj.getId(), "ROLE_ADMIN");
-        return senha;
-    }
 
     private void sendEmailHtmlPessoaJuridica(PessoaJuridica pj, String senha) {
         StringBuilder msgHtml = new StringBuilder();

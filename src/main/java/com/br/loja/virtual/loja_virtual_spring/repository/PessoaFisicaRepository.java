@@ -18,4 +18,7 @@ public interface PessoaFisicaRepository extends CrudRepository<PessoaFisica, Lon
 
     @Query(value = "select pf from  PessoaFisica pf where pf.nome = ?1")
     List<PessoaFisica> findByNome(String nome);
+
+    @Query(value = "select pf from PessoaFisica pf where pf.email = ?1")
+    PessoaFisica findByEmail(String email);
 }

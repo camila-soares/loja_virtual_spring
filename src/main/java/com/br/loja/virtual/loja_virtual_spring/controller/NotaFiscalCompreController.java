@@ -3,6 +3,7 @@ package com.br.loja.virtual.loja_virtual_spring.controller;
 
 import com.br.loja.virtual.loja_virtual_spring.exceptions.ExceptinLojaVirtual;
 import com.br.loja.virtual.loja_virtual_spring.model.NotaFiscalCompra;
+import com.br.loja.virtual.loja_virtual_spring.model.NotaFiscalVenda;
 import com.br.loja.virtual.loja_virtual_spring.repository.NotaFiscalCompraRepository;
 import com.br.loja.virtual.loja_virtual_spring.service.NotaFiscalCompraService;
 import org.aspectj.weaver.ast.Not;
@@ -14,13 +15,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @Controller
 public class NotaFiscalCompreController {
 
-    @Autowired
-    private NotaFiscalCompraRepository notaFiscalCompraRepository;
 
     @Autowired
     private NotaFiscalCompraService notaFiscalCompraService;
@@ -32,6 +32,7 @@ public class NotaFiscalCompreController {
 
       return ResponseEntity.ok(notaFiscalComprareturn);
     }
+
 
     @DeleteMapping(value = "/deleteNotaFiscalCompraPorId/{id}")
     public ResponseEntity<?> deleteNotaFiscalCompraPorId(@PathVariable("id") Long id) {
@@ -49,6 +50,30 @@ public class NotaFiscalCompreController {
 
 
         return new ResponseEntity<NotaFiscalCompra>(notaFiscalCompra, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/consultaNotaFiscalVendaPorIdVenda/{idVenda}")
+    public ResponseEntity<List<NotaFiscalVenda>> consultaNotaFiscalVendaPorIdVenda(@PathVariable Long idVenda) throws ExceptinLojaVirtual {
+        List<NotaFiscalVenda> list = notaFiscalCompraService.consultarNotaFiscalVendaPorVenda(idVenda);
+
+        return ResponseEntity.ok(list);
+    }
+
+
+    @GetMapping(value = "/consultaNotaFiscalVendaPorIdVendaUnica/{idVenda}")
+    public ResponseEntity<NotaFiscalVenda> consultaNotaFiscalVendaPorIdVendaUnica(@PathVariable Long idVenda) throws ExceptinLojaVirtual {
+        NotaFiscalVenda list = notaFiscalCompraService.consultarNotaFiscalVendaPorVendaUnica(idVenda);
+
+        return ResponseEntity.ok(list);
+    }
+
+    @GetMapping(value = "/buscarNotaFiscalPorDescricao/{descricao}")
+    public ResponseEntity<List<NotaFiscalCompra>> buscarNotaFiscalPorId(@PathVariable("descricao") String descricao) throws ExceptinLojaVirtual {
+
+        List<NotaFiscalCompra> notaFiscalCompra = notaFiscalCompraService.buscarNotaFiscalCompraPorDescricao(descricao);
+
+
+        return new ResponseEntity<List<NotaFiscalCompra>>(notaFiscalCompra, HttpStatus.OK);
     }
 
 }

@@ -7,10 +7,9 @@ import com.br.loja.virtual.loja_virtual_spring.model.CategoriaProduto;
 import com.br.loja.virtual.loja_virtual_spring.repository.CategoriaProdutoRepository;
 import com.br.loja.virtual.loja_virtual_spring.repository.PessoaJuridicaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,7 +24,7 @@ public class CategoriaProdutoService {
     public CategoriaProdutoDto persistir(CategoriaProduto categoriaProduto) throws ExceptinLojaVirtual {
 
         if (categoriaProduto.getEmpresa().equals(null) || categoriaProduto.getEmpresa().getId().equals(null)){
-            throw new ExceptinLojaVirtual("Empresa deve ser informada");
+            throw new ExceptinLojaVirtual("Empresa deve ser informada", HttpStatus.NOT_FOUND);
         }
 
 
@@ -49,7 +48,7 @@ public class CategoriaProdutoService {
        if (categoriaProduto1.isPresent()) {
            categoriaProdutoRepository.delete(categoriaProduto);
        }else {
-           throw new ExceptinLojaVirtual("NAO EXISTE");
+           throw new ExceptinLojaVirtual("NAO EXISTE", HttpStatus.NOT_FOUND);
        }
         return "Categoria produto deletado com sucesso";
     }

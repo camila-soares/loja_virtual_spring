@@ -23,8 +23,8 @@ public class ProdutoController {
 
     @PostMapping(value = "/salvarProduto")
     public ResponseEntity<Produto> criarProduto(@Valid @RequestBody Produto produto) throws ExceptinLojaVirtual, IOException {
-       Produto produtoretorno = produtoService.criarProduto(produto);
-        return new ResponseEntity<Produto>(produtoretorno, HttpStatus.CREATED);
+        produtoService.criarProduto(produto);
+        return new ResponseEntity<Produto>(produto, HttpStatus.CREATED);
     }
 
     @GetMapping(value = "/buscarProdutoPorId/{id}")

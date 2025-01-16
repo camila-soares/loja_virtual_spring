@@ -1,39 +1,49 @@
 package com.br.loja.virtual.loja_virtual_spring.model;
 
+import com.br.loja.virtual.loja_virtual_spring.enums.StatusVenda;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 @Entity
 @Table(name = "venda_compra_loja_virtual")
 @SequenceGenerator(name = "seq_venda_compra_loja_virtual", sequenceName = "seq_venda_compra_loja_virtual", allocationSize = 1, initialValue = 1)
 @Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class VendaCompraLojaVirtual implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_venda_compra_loja_virtual")
     private Long id;
 
-    @ManyToOne(targetEntity = Pessoa.class)
+    @JsonIgnore
+    @ManyToOne(targetEntity = PessoaFisica.class)
     @JoinColumn(name = "pessoa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_fk"))
-    private Pessoa pessoa;
+    private PessoaFisica pessoa;
 
-    @ManyToOne(targetEntity = Pessoa.class)
+    @JsonIgnore
+    @ManyToOne(targetEntity = PessoaJuridica.class)
     @JoinColumn(name = "empresa_id", nullable = false,
             foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
-    private Pessoa empresa;
+    private PessoaJuridica empresa;
 
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "endereco_entrega_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "endereco_entrega_fk"))
     private Endereco enderecoEntrega;
 
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "endereco_cobranca_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "endereco_cobranca_fk"))
     private Endereco enderecoCobranca;
 
@@ -52,8 +62,17 @@ public class VendaCompraLojaVirtual implements Serializable {
             foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "cupom_desconto_fk"))
     private CupomDesconto cupomDesconto;
 
-    @OneToOne
-    @JoinColumn(name = "nota_fiscal_venda_id", nullable = false,
+//    @NotNull(message = "Status da venda ou compra deve ser informado")
+//    @Column(nullable = false)
+//    @Enumerated(EnumType.STRING)
+//    private StatusVenda statusVenda;
+
+    @OneToMany(mappedBy = "vendaCompraLojaVirtual", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<ItemVendaLoja> itemVendaLojas = new ArrayList<ItemVendaLoja>();
+
+    @JsonIgnore
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "nota_fiscal_venda_id", nullable = true,
             foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "nota_fiscal_venda_fk"))
     private NotaFiscalVenda notaFiscalVenda;
 
@@ -69,6 +88,8 @@ public class VendaCompraLojaVirtual implements Serializable {
     @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     private Date dataEntrega;
+
+    private Boolean excluido = Boolean.FALSE;
 
 
 

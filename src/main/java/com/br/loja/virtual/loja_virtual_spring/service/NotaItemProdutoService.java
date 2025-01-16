@@ -5,6 +5,7 @@ import com.br.loja.virtual.loja_virtual_spring.exceptions.ExceptinLojaVirtual;
 import com.br.loja.virtual.loja_virtual_spring.model.NotaItemProduto;
 import com.br.loja.virtual.loja_virtual_spring.repository.NotaItemProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,18 +22,18 @@ public class NotaItemProdutoService {
 
         if (notaItemProduto.getId() == null) {
             if (notaItemProduto.getProduto() == null || notaItemProduto.getProduto().getId() <= 0) {
-                throw new ExceptinLojaVirtual("Produto deve ser informado");
+                throw new ExceptinLojaVirtual("Produto deve ser informado", HttpStatus.NOT_FOUND);
             }
             if (notaItemProduto.getNotaFiscalCompra() == null || notaItemProduto.getNotaFiscalCompra().getId() <= 0) {
-                throw new ExceptinLojaVirtual("Nota fiscal deve ser informada");
+                throw new ExceptinLojaVirtual("Nota fiscal deve ser informada", HttpStatus.NOT_FOUND);
             }
             if (notaItemProduto.getEmpresa() == null || notaItemProduto.getEmpresa().getId() <= 0) {
-                throw new ExceptinLojaVirtual("Empresa deve ser informada");
+                throw new ExceptinLojaVirtual("Empresa deve ser informada", HttpStatus.NOT_FOUND);
             }
             List<NotaItemProduto> notaItemProdutos =
                     notaItemProdutoRepository.findNotaItemProdutoByProdutoAndNota(notaItemProduto.getProduto().getId(), notaItemProduto.getNotaFiscalCompra().getId());
             if (!notaItemProdutos.isEmpty()) {
-                throw new ExceptinLojaVirtual("Já existe este produto cadastrado para esta nota");
+                throw new ExceptinLojaVirtual("Já existe este produto cadastrado para esta nota", HttpStatus.NOT_FOUND);
             }
         }
 
@@ -49,7 +50,7 @@ public class NotaItemProdutoService {
         NotaItemProduto notaItemProduto = notaItemProdutoRepository.findById(id).orElse(null);
 
         if (notaItemProduto == null) {
-            throw new ExceptinLojaVirtual("Não encontrou Nota Item produto com código: " + id);
+            throw new ExceptinLojaVirtual("Não encontrou Nota Item produto com código: " + id, HttpStatus.NOT_FOUND);
         }
 
         return notaItemProduto;
