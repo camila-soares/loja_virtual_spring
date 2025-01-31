@@ -17,8 +17,11 @@ import java.util.List;
 @Controller
 public class CategoriaProdutoController {
 
-    @Autowired
-    private CategoriaProdutoService categoriaProdutoService;
+    private final CategoriaProdutoService categoriaProdutoService;
+
+    public CategoriaProdutoController(CategoriaProdutoService categoriaProdutoService) {
+        this.categoriaProdutoService = categoriaProdutoService;
+    }
 
     @PostMapping(value = "/criarCategoriaProduto")
     public ResponseEntity<CategoriaProdutoDto> criarCategoriaProduto(@RequestBody CategoriaProduto categoriaProduto) throws ExceptinLojaVirtual {

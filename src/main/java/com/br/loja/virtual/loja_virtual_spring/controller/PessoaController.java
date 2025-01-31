@@ -8,7 +8,6 @@ import com.br.loja.virtual.loja_virtual_spring.model.PessoaJuridica;
 import com.br.loja.virtual.loja_virtual_spring.service.PessoaFsicaUserService;
 import com.br.loja.virtual.loja_virtual_spring.service.PessoaJuridicaUserService;
 import com.br.loja.virtual.loja_virtual_spring.service.ws.ExternalApiService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -23,14 +22,17 @@ import java.util.List;
 @RestController
 public class PessoaController {
 
-    @Autowired
-    private PessoaFsicaUserService pessoaFsicaUserService;
+    private final PessoaFsicaUserService pessoaFsicaUserService;
 
-    @Autowired
-    private PessoaJuridicaUserService pessoaJuridicaUserService;
+    private final PessoaJuridicaUserService pessoaJuridicaUserService;
 
-    @Autowired
-    private ExternalApiService externalApiService;
+    private final ExternalApiService externalApiService;
+
+    public PessoaController(PessoaFsicaUserService pessoaFsicaUserService, PessoaJuridicaUserService pessoaJuridicaUserService, ExternalApiService externalApiService) {
+        this.pessoaFsicaUserService = pessoaFsicaUserService;
+        this.pessoaJuridicaUserService = pessoaJuridicaUserService;
+        this.externalApiService = externalApiService;
+    }
 
 
     @GetMapping(value = "/consultaCep/{cep}")

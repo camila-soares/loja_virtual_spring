@@ -20,7 +20,7 @@ public class AcessoService {
         List<Acesso> acessos = acessoRepository.buscaAcessoDesc(acesso.getDescricao().toUpperCase());
 
         if (!acessos.isEmpty()) {
-                throw new ExceptinLojaVirtual("Já existe " + acesso.getDescricao() + "Cadastrado!", HttpStatus.NOT_FOUND);
+                throw new ExceptinLojaVirtual("Já existe " + acesso.getDescricao() + "Cadastrado!");
         }
 
         return this.acessoRepository.save(acesso);
@@ -38,7 +38,7 @@ public class AcessoService {
         Acesso acesso = this.acessoRepository.findById(id).orElse(null);
 
         if (acesso == null) {
-            throw new ExceptinLojaVirtual("Não encontrado Acesso com código: " + id, HttpStatus.NOT_FOUND);
+            throw new ExceptinLojaVirtual("Não encontrado Acesso com código: " + id);
         }
 
         return acesso;

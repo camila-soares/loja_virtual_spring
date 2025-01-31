@@ -2,6 +2,7 @@ package com.br.loja.virtual.loja_virtual_spring.service;
 
 
 import com.br.loja.virtual.loja_virtual_spring.dto.ItemVendaDTO;
+import com.br.loja.virtual.loja_virtual_spring.dto.RelatorioProdutoAlertaEstoqueRequestDTO;
 import com.br.loja.virtual.loja_virtual_spring.dto.VendaCompraLojaVirtualDTO;
 import com.br.loja.virtual.loja_virtual_spring.enums.ContasReceberStatus;
 import com.br.loja.virtual.loja_virtual_spring.exceptions.ControlException;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -56,6 +58,34 @@ public class VendaCompraService {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+
+    public List<RelatorioProdutoAlertaEstoqueRequestDTO>
+    relatorioComprasCancelada(RelatorioProdutoAlertaEstoqueRequestDTO relatorioProdutoAlertaEstoqueRequestDTO) {
+        List<RelatorioProdutoAlertaEstoqueRequestDTO> retorno  = new ArrayList<RelatorioProdutoAlertaEstoqueRequestDTO>();
+
+        String sql = """
+                select  vclv.id as codigoVenda,
+                        vclv.status_venda as statusVenda,
+                        p.id as codigoProduto,
+                        p.nome as nomeProduto,
+                        p.valor_venda as valorVendaProduto,
+                        p.qdt_estoque as quantidadeEstoque,
+                        pf.id as codigoCliente,
+                        pf.nome as nomeCliente,
+                        pf.cpf as cpfCliente,
+                        pf.email as emailCliente,
+                        pf.telefone as telefoneCliente
+                                from venda_compra_loja_virtual as vclv
+                                inner join item_venda_loja as ivl on ivl.venda_compra_loja_virtual_id = vclv.id
+                                inner join produto as p on p.id = ivl.produto_id
+                                inner join pessoa_fisica as pf on pf.id = vclv.pessoa_id where
+                                upper(p.nome) like upper() and vclv.status_venda = 'CANCELADA';
+                """;
+
+        retorno = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(RelatorioProdutoAlertaEstoqueRequestDTO.class));
+        return retorno;
+    }
 
     public List<VendaCompraLojaVirtual> consulgaPorNomeCliente(String nomepessoa) {
         List<VendaCompraLojaVirtual> lojaVirtualList = vendaCompraLojaVirtualRepository.vendaPorNomeCliente(nomepessoa);
@@ -196,7 +226,7 @@ public List<VendaCompraLojaVirtual> consultaPorProduto(Long idProduto) {
 
         VendaCompraLojaVirtual virtual = vendaCompraLojaVirtualRepository.findByIdExclusao(id);
         if (virtual == null) {
-            throw new ExceptinLojaVirtual("Venda nao encontrada", HttpStatus.NOT_FOUND);
+            throw new ExceptinLojaVirtual("Venda nao encontrada");
         }
 
         return virtual;

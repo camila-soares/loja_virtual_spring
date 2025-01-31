@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,8 +15,11 @@ import java.util.Optional;
 @Controller
 public class MarcaProdutoController {
 
-    @Autowired
-    private MarcaProdutoRepository marcaProdutoRepository;
+    private final MarcaProdutoRepository marcaProdutoRepository;
+
+    public MarcaProdutoController(MarcaProdutoRepository marcaProdutoRepository) {
+        this.marcaProdutoRepository = marcaProdutoRepository;
+    }
 
     @PostMapping(value = "/salvarMarcaProduto")
     public ResponseEntity<MarcaProduto> salvarMarcaProduto(@RequestBody MarcaProduto marcaProduto) {

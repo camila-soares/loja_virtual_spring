@@ -61,40 +61,40 @@ public class ProdutoService {
 
     private void validateFields(Produto produto) throws ExceptinLojaVirtual, IOException {
         if (produto.getEmpresa() == null || produto.getEmpresa().getId() <= 0) {
-            throw new ExceptinLojaVirtual("Empresa responsável deve ser informada", HttpStatus.NOT_FOUND);
+            throw new ExceptinLojaVirtual("Empresa responsável deve ser informada");
         }
 
 
         if (produto.getTipoUnidade() == null || produto.getTipoUnidade().trim().isEmpty()) {
-            throw new ExceptinLojaVirtual("Tipo da unidade deve ser informada", HttpStatus.NOT_FOUND);
+            throw new ExceptinLojaVirtual("Tipo da unidade deve ser informada");
         }
 
         if (produto.getNome().length() < 10) {
-            throw new ExceptinLojaVirtual("Nome do produto deve ter mais de 10 letras.", HttpStatus.NOT_FOUND);
+            throw new ExceptinLojaVirtual("Nome do produto deve ter mais de 10 letras.");
         }
 
         if (produto.getId() == null) {
             List<Produto> produtos  = produtoRepository.buscarProdutoNome(produto.getNome().toUpperCase(), produto.getEmpresa().getId());
 
             if (!produtos.isEmpty()) {
-                throw new ExceptinLojaVirtual("Já existe Produto com a descrição: " + produto.getNome(), HttpStatus.NOT_FOUND);
+                throw new ExceptinLojaVirtual("Já existe Produto com a descrição: " + produto.getNome());
             }
         }
         if (produto.getCategoriaProduto() == null || produto.getCategoriaProduto().getId() <= 0) {
-            throw new ExceptinLojaVirtual("Categoria do produto deve ser informada", HttpStatus.NOT_FOUND);
+            throw new ExceptinLojaVirtual("Categoria do produto deve ser informada");
         }
         if (produto.getMarcaProduto() == null || produto.getMarcaProduto().getId() <= 0) {
-            throw new ExceptinLojaVirtual("Marca do produto deve ser informada", HttpStatus.NOT_FOUND);
+            throw new ExceptinLojaVirtual("Marca do produto deve ser informada");
         }
         if (produto.getQdtEstoque() < 1){
-            throw new ExceptinLojaVirtual("Estoque do produto deve ter no minimo 1", HttpStatus.NOT_FOUND);
+            throw new ExceptinLojaVirtual("Estoque do produto deve ter no minimo 1");
         }
-        if (produto.getImagens() == null || produto.getImagens().isEmpty() || produto.getImagens().size() == 0) {
-            throw new ExceptinLojaVirtual("Deve ser informada a imagens para o produto", HttpStatus.NOT_FOUND);
+        if (produto.getImagens() == null || produto.getImagens().isEmpty()) {
+            throw new ExceptinLojaVirtual("Deve ser informada a imagens para o produto");
         }else if (produto.getImagens().size() < 3){
-            throw new ExceptinLojaVirtual("Deve ser informada pelo menos 3 imagens para o produto", HttpStatus.NOT_FOUND);
+            throw new ExceptinLojaVirtual("Deve ser informada pelo menos 3 imagens para o produto");
         } else if (produto.getImagens().size() > 6){
-            throw new ExceptinLojaVirtual("Deve ser informada no máximo 6 imagens para o produto", HttpStatus.NOT_FOUND);
+            throw new ExceptinLojaVirtual("Deve ser informada no máximo 6 imagens para o produto");
         }
 
 

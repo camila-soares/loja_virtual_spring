@@ -62,10 +62,10 @@ public class VendaCompraLojaVirtual implements Serializable {
             foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "cupom_desconto_fk"))
     private CupomDesconto cupomDesconto;
 
-//    @NotNull(message = "Status da venda ou compra deve ser informado")
-//    @Column(nullable = false)
-//    @Enumerated(EnumType.STRING)
-//    private StatusVenda statusVenda;
+    @NotNull(message = "Status da venda ou compra deve ser informado")
+    @Column(nullable = true)
+    @Enumerated(EnumType.STRING)
+    private StatusVenda statusVenda;
 
     @OneToMany(mappedBy = "vendaCompraLojaVirtual", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ItemVendaLoja> itemVendaLojas = new ArrayList<ItemVendaLoja>();

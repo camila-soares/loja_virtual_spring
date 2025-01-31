@@ -27,11 +27,11 @@ public class ImagemProdutoController {
     public ResponseEntity<ImagemProdutoDTO> salvarImagemProduto(@RequestBody ImagemProduto imagemProduto) throws ExceptinLojaVirtual {
 
         if (imagemProduto.getProduto().getId() == null || imagemProduto.getProduto().getId() <= 0) {
-            throw new ExceptinLojaVirtual("Deve ser informado um produto", HttpStatus.NOT_FOUND);
+            throw new ExceptinLojaVirtual("Deve ser informado um produto");
         }
 
         if (imagemProduto.getEmpresa().getId() == null || imagemProduto.getEmpresa().getId() <= 0) {
-            throw new ExceptinLojaVirtual("Deve ser informado um empresa", HttpStatus.NOT_FOUND);
+            throw new ExceptinLojaVirtual("Deve ser informado um empresa");
         }
         ImagemProduto imagemProdutoSalvo = imagemProdutoRepository.saveAndFlush(imagemProduto);
 
@@ -47,7 +47,7 @@ public class ImagemProdutoController {
 
     @DeleteMapping(value = "/deleteImagemProduto/{id}")
     public ResponseEntity<?> deleteImagemProduto(@PathVariable("id") Long id) throws ExceptinLojaVirtual {
-        Optional<ImagemProduto> imagemProduto = Optional.ofNullable(imagemProdutoRepository.findById(id).orElseThrow(() -> new ExceptinLojaVirtual("imagem não encontrada.", HttpStatus.NOT_FOUND)));
+        Optional<ImagemProduto> imagemProduto = Optional.ofNullable(imagemProdutoRepository.findById(id).orElseThrow(() -> new ExceptinLojaVirtual("imagem não encontrada.")));
         if(imagemProduto.isPresent()){
             imagemProdutoRepository.deleteById(id);
             return ResponseEntity.ok("Imagem deletada com sucesso!");

@@ -22,18 +22,18 @@ public class NotaItemProdutoService {
 
         if (notaItemProduto.getId() == null) {
             if (notaItemProduto.getProduto() == null || notaItemProduto.getProduto().getId() <= 0) {
-                throw new ExceptinLojaVirtual("Produto deve ser informado", HttpStatus.NOT_FOUND);
+                throw new ExceptinLojaVirtual("Produto deve ser informado");
             }
             if (notaItemProduto.getNotaFiscalCompra() == null || notaItemProduto.getNotaFiscalCompra().getId() <= 0) {
-                throw new ExceptinLojaVirtual("Nota fiscal deve ser informada", HttpStatus.NOT_FOUND);
+                throw new ExceptinLojaVirtual("Nota fiscal deve ser informada");
             }
             if (notaItemProduto.getEmpresa() == null || notaItemProduto.getEmpresa().getId() <= 0) {
-                throw new ExceptinLojaVirtual("Empresa deve ser informada", HttpStatus.NOT_FOUND);
+                throw new ExceptinLojaVirtual("Empresa deve ser informada");
             }
             List<NotaItemProduto> notaItemProdutos =
                     notaItemProdutoRepository.findNotaItemProdutoByProdutoAndNota(notaItemProduto.getProduto().getId(), notaItemProduto.getNotaFiscalCompra().getId());
             if (!notaItemProdutos.isEmpty()) {
-                throw new ExceptinLojaVirtual("Já existe este produto cadastrado para esta nota", HttpStatus.NOT_FOUND);
+                throw new ExceptinLojaVirtual("Já existe este produto cadastrado para esta nota!");
             }
         }
 
@@ -50,7 +50,7 @@ public class NotaItemProdutoService {
         NotaItemProduto notaItemProduto = notaItemProdutoRepository.findById(id).orElse(null);
 
         if (notaItemProduto == null) {
-            throw new ExceptinLojaVirtual("Não encontrou Nota Item produto com código: " + id, HttpStatus.NOT_FOUND);
+            throw new ExceptinLojaVirtual("Não encontrou Nota Item produto com código: " + id);
         }
 
         return notaItemProduto;

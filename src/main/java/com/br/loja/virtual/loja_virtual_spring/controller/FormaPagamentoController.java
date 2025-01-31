@@ -13,8 +13,11 @@ import java.util.List;
 @RestController
 public class FormaPagamentoController {
 
-    @Autowired
-    private FormaPagamentoService formaPagamentoService;
+    private final FormaPagamentoService formaPagamentoService;
+
+    public FormaPagamentoController(FormaPagamentoService formaPagamentoService) {
+        this.formaPagamentoService = formaPagamentoService;
+    }
 
     @PostMapping(value = "/salvarFormaDePagamento")
     public ResponseEntity<FormaPagamento> salvarFormaDePagamento(@RequestBody FormaPagamento formaPagamento) {

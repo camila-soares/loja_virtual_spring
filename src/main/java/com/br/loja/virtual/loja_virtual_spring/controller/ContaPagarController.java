@@ -5,11 +5,8 @@ import com.br.loja.virtual.loja_virtual_spring.exceptions.ExceptinLojaVirtual;
 import com.br.loja.virtual.loja_virtual_spring.model.ContaPagar;
 import com.br.loja.virtual.loja_virtual_spring.repository.ContaPagarRepository;
 import com.br.loja.virtual.loja_virtual_spring.service.ContaPagarService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,11 +16,14 @@ import java.util.Optional;
 @RestController
 public class ContaPagarController {
 
-    @Autowired
-    private ContaPagarService contaPagarService;
+    private final ContaPagarService contaPagarService;
 
-    @Autowired
-    private ContaPagarRepository contaPagarRepository;
+    private final ContaPagarRepository contaPagarRepository;
+
+    public ContaPagarController(ContaPagarService contaPagarService, ContaPagarRepository contaPagarRepository) {
+        this.contaPagarService = contaPagarService;
+        this.contaPagarRepository = contaPagarRepository;
+    }
 
 
     @PostMapping(value = "/salvarContaPagar")

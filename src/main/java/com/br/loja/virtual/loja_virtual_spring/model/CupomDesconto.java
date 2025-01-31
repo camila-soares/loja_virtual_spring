@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -21,13 +22,16 @@ public class CupomDesconto implements Serializable {
     @EqualsAndHashCode.Include
     private Long id;
 
+    @NotEmpty(message = "Informe o código do desconto")
     @Column(nullable = false)
     private String codDesc;
+
 
     private BigDecimal valorRealDesconto;
 
     private BigDecimal valorPorcentDesconto;
 
+    @NotEmpty(message = "Informe a data de validade do cupom")
     @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     private Date dataValidadeCupom;

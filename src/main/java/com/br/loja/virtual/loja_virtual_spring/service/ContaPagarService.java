@@ -17,15 +17,15 @@ public class ContaPagarService {
     public ContaPagar salvar(ContaPagar contaPagar) throws ExceptinLojaVirtual {
 
         if (contaPagar.getEmpresa() == null || contaPagar.getEmpresa().getId() <= 0) {
-            throw new ExceptinLojaVirtual("Empresa deve ser informadda", HttpStatus.NOT_FOUND);
+            throw new ExceptinLojaVirtual("Empresa deve ser informadda");
         }
 
         if (contaPagar.getPessoa() == null || contaPagar.getPessoa().getId() <= 0) {
-            throw new ExceptinLojaVirtual("Pessoa deve ser informada", HttpStatus.NOT_FOUND);
+            throw new ExceptinLojaVirtual("Pessoa deve ser informada");
         }
 
         if (contaPagar.getPessoaFornecedor() == null || contaPagar.getPessoaFornecedor().getId() <= 0) {
-            throw new ExceptinLojaVirtual("Pessoa fornecedor deve ser informada", HttpStatus.NOT_FOUND);
+            throw new ExceptinLojaVirtual("Pessoa fornecedor deve ser informada");
         }
 
         return contaPagarRepository.save(contaPagar);

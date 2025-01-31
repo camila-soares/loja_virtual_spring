@@ -96,19 +96,19 @@ public class PessoaJuridicaUserService {
 
     private void validationFields(PessoaJuridica pj) throws ExceptinLojaVirtual {
         if (pj == null) {
-            throw new ExceptinLojaVirtual("Pessoa juridica não pode ser nulo", HttpStatus.NOT_FOUND);
+            throw new ExceptinLojaVirtual("Pessoa juridica não pode ser nulo");
         }
 
         if (!ValidateCNPJ.isCNPJ(pj.getCnpj())) {
-            throw new ExceptinLojaVirtual("CNPJ Inválido, verifique a numeração corretamente " + pj.getCnpj(), HttpStatus.NOT_FOUND);
+            throw new ExceptinLojaVirtual("CNPJ Inválido, verifique a numeração corretamente " + pj.getCnpj());
         }
 
         if (pj.getId() == null && pessoaRepository.findByCnpj(pj.getCnpj()) != null) {
-            throw new ExceptinLojaVirtual("CNPJ já cadastrado " + pj.getCnpj(), HttpStatus.NOT_FOUND);
+            throw new ExceptinLojaVirtual("CNPJ já cadastrado " + pj.getCnpj());
         }
 
         if (pj.getId() == null && pessoaRepository.existInscricaoEstadual(pj.getInscEstadual()) != null) {
-            throw new ExceptinLojaVirtual("Já existe inscricao estsdual com o número " + pj.getInscEstadual(), HttpStatus.NOT_FOUND);
+            throw new ExceptinLojaVirtual("Já existe inscricao estsdual com o número " + pj.getInscEstadual());
         }
     }
 

@@ -19,11 +19,14 @@ import java.util.Optional;
 @RestController
 public class AvalicaoProdutoController {
 
-    @Autowired
-    private AvaliacaoProdutoService avaliacaoProdutoService;
+    private final AvaliacaoProdutoService avaliacaoProdutoService;
 
-    @Autowired
-    private AvaliacaoProdutoRepository avaliacaoProdutoRepository;
+    private final AvaliacaoProdutoRepository avaliacaoProdutoRepository;
+
+    public AvalicaoProdutoController(AvaliacaoProdutoRepository avaliacaoProdutoRepository, AvaliacaoProdutoService avaliacaoProdutoService) {
+        this.avaliacaoProdutoRepository = avaliacaoProdutoRepository;
+        this.avaliacaoProdutoService = avaliacaoProdutoService;
+    }
 
 
     @PostMapping(value = "/criaAvaliacaoProduto")
@@ -80,7 +83,7 @@ public class AvalicaoProdutoController {
         avaliacaoProdutoDTO.setEmpresa(avaliacaoProduto.get().getEmpresa().getId());
         avaliacaoProdutoDTO.setProduto(avaliacaoProduto.get().getProduto().getId());
         if (!avaliacaoProduto.isPresent()) {
-         throw new ExceptinLojaVirtual("Avaliacao do produto nao foi encontrada", HttpStatus.NOT_FOUND);
+         throw new ExceptinLojaVirtual("Avaliacao do produto nao foi encontrada");
         }
         return new ResponseEntity<>(avaliacaoProdutoDTO, HttpStatus.OK);
     }
@@ -91,7 +94,7 @@ public class AvalicaoProdutoController {
         List<AvaliacaoProdutoDTO> avaliacaoProdutoDTOS = new ArrayList<>();
         List<AvaliacaoProduto> listaavaliacaoProduto = avaliacaoProdutoRepository.findAvalicaoProdutoByIdProduto(idProduto);
         if (listaavaliacaoProduto.isEmpty()) {
-            throw new ExceptinLojaVirtual("Avaliacao do produto nao foi encontrada", HttpStatus.NOT_FOUND);
+            throw new ExceptinLojaVirtual("Avaliacao do produto nao foi encontrada");
         }
 
         return getIterableResponseEntity(listaavaliacaoProduto, avaliacaoProdutoDTOS);
@@ -103,7 +106,7 @@ public class AvalicaoProdutoController {
         List<AvaliacaoProdutoDTO> avaliacaoProdutoDTOS = new ArrayList<>();
         List<AvaliacaoProduto> listaavaliacaoProduto = avaliacaoProdutoRepository.findAvaliacaoProdutoByIdPessoa(idPessoa);
         if (listaavaliacaoProduto.isEmpty()) {
-            throw new ExceptinLojaVirtual("Avaliacao do produto nao foi encontrada", HttpStatus.NOT_FOUND);
+            throw new ExceptinLojaVirtual("Avaliacao do produto nao foi encontrada");
         }
 
         return getIterableResponseEntity(listaavaliacaoProduto, avaliacaoProdutoDTOS);

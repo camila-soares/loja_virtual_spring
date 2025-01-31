@@ -1,12 +1,8 @@
 package com.br.loja.virtual.loja_virtual_spring.controller;
 
 import com.br.loja.virtual.loja_virtual_spring.exceptions.ExceptinLojaVirtual;
-import com.br.loja.virtual.loja_virtual_spring.model.Acesso;
-import com.br.loja.virtual.loja_virtual_spring.model.NotaFiscalCompra;
 import com.br.loja.virtual.loja_virtual_spring.model.NotaItemProduto;
-import com.br.loja.virtual.loja_virtual_spring.repository.NotaItemProdutoRepository;
 import com.br.loja.virtual.loja_virtual_spring.service.NotaItemProdutoService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -18,8 +14,11 @@ import javax.validation.Valid;
 @Controller
 public class NotaItemProdutoController {
 
-    @Autowired
-    private NotaItemProdutoService notaItemProdutoService;
+    private final NotaItemProdutoService notaItemProdutoService;
+
+    public NotaItemProdutoController(NotaItemProdutoService notaItemProdutoService) {
+        this.notaItemProdutoService = notaItemProdutoService;
+    }
 
     @PostMapping(value = "/salvaNotaItemProduto")
     public ResponseEntity<NotaItemProduto> salvar(@RequestBody @Valid NotaItemProduto notaItemProduto) throws Exception {

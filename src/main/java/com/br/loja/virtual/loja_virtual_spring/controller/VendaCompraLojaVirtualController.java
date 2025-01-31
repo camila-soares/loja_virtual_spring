@@ -2,17 +2,12 @@ package com.br.loja.virtual.loja_virtual_spring.controller;
 
 
 import com.br.loja.virtual.loja_virtual_spring.dto.ItemVendaDTO;
+import com.br.loja.virtual.loja_virtual_spring.dto.RelatorioProdutoAlertaEstoqueRequestDTO;
 import com.br.loja.virtual.loja_virtual_spring.dto.VendaCompraLojaVirtualDTO;
 import com.br.loja.virtual.loja_virtual_spring.exceptions.ExceptinLojaVirtual;
-import com.br.loja.virtual.loja_virtual_spring.model.ContaReceber;
 import com.br.loja.virtual.loja_virtual_spring.model.ItemVendaLoja;
-import com.br.loja.virtual.loja_virtual_spring.model.NotaFiscalVenda;
 import com.br.loja.virtual.loja_virtual_spring.model.VendaCompraLojaVirtual;
-import com.br.loja.virtual.loja_virtual_spring.repository.NotaFiscalVendaaRepository;
-import com.br.loja.virtual.loja_virtual_spring.repository.VendaCompraLojaVirtualRepository;
 import com.br.loja.virtual.loja_virtual_spring.service.VendaCompraService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,17 +16,28 @@ import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 @RestController
 public class VendaCompraLojaVirtualController {
 
-    @Autowired
-    private VendaCompraService vendaCompraService;
+    private final VendaCompraService vendaCompraService;
 
-    @Autowired
-    private NotaFiscalVendaaRepository notaFiscalVendaaRepository;
+    public VendaCompraLojaVirtualController(VendaCompraService vendaCompraService) {
+        this.vendaCompraService = vendaCompraService;
+    }
+
+
+    @PostMapping(value = "/relatorioComprasCanceladas")
+    public ResponseEntity<List<RelatorioProdutoAlertaEstoqueRequestDTO>>
+    relatorioProCompradoNotaFiscalCompra(@RequestBody RelatorioProdutoAlertaEstoqueRequestDTO alertaEstoqueRequestDTO){
+
+        List<RelatorioProdutoAlertaEstoqueRequestDTO> retorno = new ArrayList<>();
+        retorno =  vendaCompraService.relatorioComprasCancelada(alertaEstoqueRequestDTO);
+        return new ResponseEntity<>(retorno, HttpStatus.OK);
+    }
+
+
 
     @PostMapping(value = "/salvarCompraVenda")
     public ResponseEntity<VendaCompraLojaVirtualDTO> salvarCompraVenda(@RequestBody VendaCompraLojaVirtual vendaCompraLojaVirtual) throws MessagingException, UnsupportedEncodingException {

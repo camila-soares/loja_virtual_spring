@@ -1,20 +1,21 @@
 package com.br.loja.virtual.loja_virtual_spring.controller;
 
 
+import com.br.loja.virtual.loja_virtual_spring.dto.RelatorioCompraNotaFiscalRequestDTO;
+import com.br.loja.virtual.loja_virtual_spring.dto.RelatorioCompraNotaFiscalResponseDTO;
+import com.br.loja.virtual.loja_virtual_spring.dto.RelatorioProdutoAlertaEstoqueRequestDTO;
 import com.br.loja.virtual.loja_virtual_spring.exceptions.ExceptinLojaVirtual;
 import com.br.loja.virtual.loja_virtual_spring.model.NotaFiscalCompra;
 import com.br.loja.virtual.loja_virtual_spring.model.NotaFiscalVenda;
-import com.br.loja.virtual.loja_virtual_spring.repository.NotaFiscalCompraRepository;
 import com.br.loja.virtual.loja_virtual_spring.service.NotaFiscalCompraService;
-import org.aspectj.weaver.ast.Not;
-import org.hibernate.type.descriptor.java.LocalDateTimeJavaDescriptor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -22,8 +23,30 @@ import java.util.List;
 public class NotaFiscalCompreController {
 
 
-    @Autowired
-    private NotaFiscalCompraService notaFiscalCompraService;
+    private final NotaFiscalCompraService notaFiscalCompraService;
+
+    public NotaFiscalCompreController(NotaFiscalCompraService notaFiscalCompraService) {
+        this.notaFiscalCompraService = notaFiscalCompraService;
+    }
+
+    @PostMapping(value = "/relatorioProCompradoNotaFiscalCompra")
+    public ResponseEntity<List<RelatorioCompraNotaFiscalResponseDTO>> relatorioProCompradoNotaFiscalCompra(@RequestBody
+                                                                  RelatorioCompraNotaFiscalRequestDTO fiscalRequestDTO){
+
+        List<RelatorioCompraNotaFiscalResponseDTO> retorno = new ArrayList<>();
+        notaFiscalCompraService.relatorioProCompradoNotaFiscalCompra(fiscalRequestDTO);
+        retorno =  notaFiscalCompraService.relatorioProCompradoNotaFiscalCompra(fiscalRequestDTO);
+        return new ResponseEntity<>(retorno, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/relatorioAlertaEsqtoque")
+    public ResponseEntity<List<RelatorioProdutoAlertaEstoqueRequestDTO>>
+    relatorioProCompradoNotaFiscalCompra(@RequestBody RelatorioProdutoAlertaEstoqueRequestDTO alertaEstoqueRequestDTO){
+
+        List<RelatorioProdutoAlertaEstoqueRequestDTO> retorno = new ArrayList<>();
+        retorno =  notaFiscalCompraService.relatorioProEstoqueNotaFiscalCompra(alertaEstoqueRequestDTO);
+        return new ResponseEntity<>(retorno, HttpStatus.OK);
+    }
 
     @PostMapping(value = "/cadastrarNotaFicalCompra")
     public ResponseEntity<NotaFiscalCompra> cadastrarNotaFiscalCompra(@Valid @RequestBody NotaFiscalCompra notaFiscalCompra) {
