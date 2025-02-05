@@ -3,6 +3,7 @@ package com.br.loja.virtual.loja_virtual_spring.enums;
 import lombok.*;
 
 
+
 @Getter
 @ToString
 public enum StatusVenda {
@@ -13,11 +14,8 @@ public enum StatusVenda {
 
     private String descricao = "";
 
-    private StatusVenda(String valor){
+    private  StatusVenda(String valor){
         this.descricao = valor;
-    }
-    public void setDescricao(String descricao){
-        this.descricao = descricao;
     }
 
 

@@ -1,7 +1,6 @@
 package com.br.loja.virtual.loja_virtual_spring;
 
 import com.br.loja.virtual.loja_virtual_spring.controller.PessoaController;
-import com.br.loja.virtual.loja_virtual_spring.dto.CEPDto;
 import com.br.loja.virtual.loja_virtual_spring.enums.TipoEndereco;
 import com.br.loja.virtual.loja_virtual_spring.enums.TipoPessoa;
 import com.br.loja.virtual.loja_virtual_spring.exceptions.ExceptinLojaVirtual;
@@ -17,7 +16,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
-import java.util.Calendar;
 
 import static org.junit.Assert.assertEquals;
 
@@ -33,6 +31,8 @@ public class UsuarioTest {
 
     @Autowired
     private PessoaJuridicaRepository  pessoaJuridicaRepository;
+
+
 
     @Test
     public void  testPessoaFisica() throws ExceptinLojaVirtual, MessagingException, UnsupportedEncodingException {

@@ -1,4 +1,4 @@
-package com.br.loja.virtual.loja_virtual_spring.dto;
+package com.br.loja.virtual.loja_virtual_spring.dto.relatorios;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -2,17 +2,22 @@ package com.br.loja.virtual.loja_virtual_spring.controller;
 
 
 import com.br.loja.virtual.loja_virtual_spring.dto.ItemVendaDTO;
-import com.br.loja.virtual.loja_virtual_spring.dto.RelatorioProdutoAlertaEstoqueRequestDTO;
+import com.br.loja.virtual.loja_virtual_spring.dto.relatorios.RelatorioStatusCompraDTO;
 import com.br.loja.virtual.loja_virtual_spring.dto.VendaCompraLojaVirtualDTO;
+import com.br.loja.virtual.loja_virtual_spring.dto.calculofrete.CalculoFreteDTO;
+import com.br.loja.virtual.loja_virtual_spring.dto.calculofrete.EmpresaTransporteDTO;
 import com.br.loja.virtual.loja_virtual_spring.exceptions.ExceptinLojaVirtual;
 import com.br.loja.virtual.loja_virtual_spring.model.ItemVendaLoja;
 import com.br.loja.virtual.loja_virtual_spring.model.VendaCompraLojaVirtual;
 import com.br.loja.virtual.loja_virtual_spring.service.VendaCompraService;
+import com.br.loja.virtual.loja_virtual_spring.service.ws.MelhorEnvioService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
+import javax.validation.Valid;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -22,20 +27,52 @@ import java.util.List;
 public class VendaCompraLojaVirtualController {
 
     private final VendaCompraService vendaCompraService;
+    private final MelhorEnvioService melhorEnvioService;
 
-    public VendaCompraLojaVirtualController(VendaCompraService vendaCompraService) {
+    public VendaCompraLojaVirtualController(VendaCompraService vendaCompraService, MelhorEnvioService melhorEnvioService) {
         this.vendaCompraService = vendaCompraService;
+        this.melhorEnvioService = melhorEnvioService;
+    }
+
+    @GetMapping("/cancelaEtiqueta/{idEtiqueta}/{descricao}")
+    public ResponseEntity<String> cancelaEtiqueta(@PathVariable String idEtiqueta, @PathVariable String reason_id, @PathVariable  String descricao) throws IOException {
+
+        String  r = vendaCompraService.cancelaEtiqueta(idEtiqueta, reason_id, descricao);
+
+        return ResponseEntity.status(HttpStatus.OK).body(r);
+    }
+
+    @ResponseBody
+    @GetMapping(value = "/imprimeCompraEtiquetaFrete/{idVenda}")
+    public ResponseEntity<String> imprimeCompraEtiquetaFrete(@PathVariable("idVenda") Long idVenda) throws  IOException, ExceptinLojaVirtual {
+
+        String compraLojaVirtual = melhorEnvioService.imprimeEtiquta(idVenda);
+
+        return new  ResponseEntity<>(compraLojaVirtual, HttpStatus.OK);
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/calculoDeFrete")
+    public ResponseEntity<List<EmpresaTransporteDTO>> cslculoDeFrete(@RequestBody @Valid CalculoFreteDTO calculoFreteDTO) throws  IOException, ExceptinLojaVirtual {
+
+
+        List<EmpresaTransporteDTO>  list = vendaCompraService.calculoDeFrete(calculoFreteDTO);
+
+        return new  ResponseEntity<>(list, HttpStatus.OK);
     }
 
 
-    @PostMapping(value = "/relatorioComprasCanceladas")
-    public ResponseEntity<List<RelatorioProdutoAlertaEstoqueRequestDTO>>
-    relatorioProCompradoNotaFiscalCompra(@RequestBody RelatorioProdutoAlertaEstoqueRequestDTO alertaEstoqueRequestDTO){
 
-        List<RelatorioProdutoAlertaEstoqueRequestDTO> retorno = new ArrayList<>();
+        @PostMapping(value = "/relatorioStatusCompras")
+    public ResponseEntity<List<RelatorioStatusCompraDTO>>
+    relatorioProCompradoNotaFiscalCompra(@RequestBody @Valid RelatorioStatusCompraDTO alertaEstoqueRequestDTO){
+
+        List<RelatorioStatusCompraDTO> retorno = new ArrayList<>();
         retorno =  vendaCompraService.relatorioComprasCancelada(alertaEstoqueRequestDTO);
         return new ResponseEntity<>(retorno, HttpStatus.OK);
     }
+
+
 
 
 

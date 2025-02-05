@@ -1,17 +1,14 @@
 package com.br.loja.virtual.loja_virtual_spring.service;
 
 
-import com.br.loja.virtual.loja_virtual_spring.dto.RelatorioCompraNotaFiscalRequestDTO;
-import com.br.loja.virtual.loja_virtual_spring.dto.RelatorioCompraNotaFiscalResponseDTO;
-import com.br.loja.virtual.loja_virtual_spring.dto.RelatorioProdutoAlertaEstoqueRequestDTO;
+import com.br.loja.virtual.loja_virtual_spring.dto.relatorios.RelatorioCompraNotaFiscalRequestDTO;
+import com.br.loja.virtual.loja_virtual_spring.dto.relatorios.RelatorioCompraNotaFiscalResponseDTO;
+import com.br.loja.virtual.loja_virtual_spring.dto.relatorios.RelatorioProdutoAlertaEstoqueRequestDTO;
 import com.br.loja.virtual.loja_virtual_spring.exceptions.ExceptinLojaVirtual;
 import com.br.loja.virtual.loja_virtual_spring.model.NotaFiscalCompra;
 import com.br.loja.virtual.loja_virtual_spring.model.NotaFiscalVenda;
 import com.br.loja.virtual.loja_virtual_spring.repository.NotaFiscalCompraRepository;
 import com.br.loja.virtual.loja_virtual_spring.repository.NotaFiscalVendaaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -128,10 +125,10 @@ public class NotaFiscalCompraService {
             sql += " and p.id = " + relatorioProdutoAlertaEstoqueRequestDTO.getCodigoProduto() + " ";
         }
         if (!relatorioProdutoAlertaEstoqueRequestDTO.getNomeProduto().isEmpty()) {
-            sql = "upper(p.nomeProduto) like upper('%"+relatorioProdutoAlertaEstoqueRequestDTO.getNomeProduto()+"') + " ;
+            sql = " and upper(p.nomeProduto) like upper('%"+relatorioProdutoAlertaEstoqueRequestDTO.getNomeProduto()+"') + " ;
         }
         if (!relatorioProdutoAlertaEstoqueRequestDTO.getNomeFornecedor().isEmpty()) {
-            sql = "upper(pj.nome) like upper('%"+relatorioProdutoAlertaEstoqueRequestDTO.getNomeFornecedor()+"') + " ;
+            sql = " and upper(pj.nome) like upper('%"+relatorioProdutoAlertaEstoqueRequestDTO.getNomeFornecedor()+"') + " ;
         }
         retorno = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(RelatorioProdutoAlertaEstoqueRequestDTO.class));
         return retorno;

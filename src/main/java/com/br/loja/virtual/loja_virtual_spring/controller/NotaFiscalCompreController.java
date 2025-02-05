@@ -1,9 +1,9 @@
 package com.br.loja.virtual.loja_virtual_spring.controller;
 
 
-import com.br.loja.virtual.loja_virtual_spring.dto.RelatorioCompraNotaFiscalRequestDTO;
-import com.br.loja.virtual.loja_virtual_spring.dto.RelatorioCompraNotaFiscalResponseDTO;
-import com.br.loja.virtual.loja_virtual_spring.dto.RelatorioProdutoAlertaEstoqueRequestDTO;
+import com.br.loja.virtual.loja_virtual_spring.dto.relatorios.RelatorioCompraNotaFiscalRequestDTO;
+import com.br.loja.virtual.loja_virtual_spring.dto.relatorios.RelatorioCompraNotaFiscalResponseDTO;
+import com.br.loja.virtual.loja_virtual_spring.dto.relatorios.RelatorioProdutoAlertaEstoqueRequestDTO;
 import com.br.loja.virtual.loja_virtual_spring.exceptions.ExceptinLojaVirtual;
 import com.br.loja.virtual.loja_virtual_spring.model.NotaFiscalCompra;
 import com.br.loja.virtual.loja_virtual_spring.model.NotaFiscalVenda;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @RestController

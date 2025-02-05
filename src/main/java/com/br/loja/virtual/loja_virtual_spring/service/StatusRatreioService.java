@@ -11,8 +11,11 @@ import java.util.List;
 @Service
 public class StatusRatreioService {
 
-    @Autowired
-    private StatusRastreioRepository statusRastreioRepository;
+    private final StatusRastreioRepository statusRastreioRepository;
+
+    public StatusRatreioService(StatusRastreioRepository statusRastreioRepository) {
+        this.statusRastreioRepository = statusRastreioRepository;
+    }
 
 
     public List<StatusRatreio> consultarStatusRatreioPorVenda(Long idVenda) {

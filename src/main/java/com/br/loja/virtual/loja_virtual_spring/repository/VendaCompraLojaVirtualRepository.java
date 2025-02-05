@@ -82,15 +82,23 @@ public interface VendaCompraLojaVirtualRepository extends CrudRepository<VendaCo
     List<VendaCompraLojaVirtual> consultaVendaFaixaData(Date data1, Date data2);
 
     @Modifying(flushAutomatically = true)
-    @Query(nativeQuery = true, value = "update vd_cp_loja_virt set codigo_etiqueta = ?1 where id = ?2")
+    @Query(nativeQuery = true, value = "update venda_compra_loja_virtual set codigo_etiqueta = ?1 where id = ?2")
     void updateEtiqueta(String idEtiqueta, Long idVenda);
 
     @Modifying(flushAutomatically = true)
-    @Query(nativeQuery = true, value = "update vd_cp_loja_virt set url_imprime_etiqueta = ?1 where id = ?2")
+    @Query(nativeQuery = true, value = "update venda_compra_loja_virtual set valor_frete = ?1 where id = ?2")
+    void updateValorFrete(Double valorFrete, Long idVenda);
+
+    @Modifying(flushAutomatically = true)
+    @Query(nativeQuery = true, value = "update venda_compra_loja_virtual set url_imprime_etiqueta = ?1 where id = ?2")
     void updateURLEtiqueta(String urlEtiqueta, Long id);
 
 
     @Modifying(flushAutomatically = true)
-    @Query(nativeQuery = true, value = "update vd_cp_loja_virt set status_venda_loja_virtual = 'FINALIZADA' where id = ?1")
+    @Query(nativeQuery = true, value = "update venda_compra_loja_virtual set status_venda_loja_virtual = 'FINALIZADA' where id = ?1")
     void updateFinalizaVenda(Long id);
+
+    @Modifying(flushAutomatically = true)
+    @Query(nativeQuery = true, value = "update venda_compra_loja_virtual set url_imprime_etiqueta = ?1 where id = ?2")
+    void updateUrlEtiquta(String urlEtiqueta, Long id);
 }

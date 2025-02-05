@@ -91,6 +91,15 @@ public class VendaCompraLojaVirtual implements Serializable {
 
     private Boolean excluido = Boolean.FALSE;
 
+    private String codigoEtiqueta;
+
+    private String urlImprimeEtiqueta;
+
+    /**
+     * QUANDO O FRETE É ESCOLHIDO NO MOMENTO DA COMPRA
+     */
+    private String servicoTransportadora;
+
 
 
 

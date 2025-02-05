@@ -40,16 +40,16 @@ public class Produto implements Serializable {
     private String descricao;
 
     @Column(nullable = false)
-    private Double peso;
+    private Integer peso;
 
     @Column(nullable = false)
-    private Double largura;
+    private Integer largura;
 
     @Column(nullable = false)
-    private Double altura;
+    private Integer altura;
 
     @Column(nullable = false)
-    private Double profundidade;
+    private Integer profundidade;
 
     @Column(nullable = false)
     private BigDecimal valorVenda = BigDecimal.ZERO;
